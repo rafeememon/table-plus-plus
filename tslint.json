@@ -1,0 +1,10 @@
+{
+  "extends": [
+    "tslint:recommended",
+    "tslint-react"
+  ],
+  "rules": {
+    "object-literal-sort-keys": false,
+    "variable-name": [true, "allow-leading-underscore"]
+  }
+}

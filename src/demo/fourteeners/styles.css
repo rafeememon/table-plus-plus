@@ -1,0 +1,12 @@
+table {
+    border-spacing: 0;
+    user-select: none;
+}
+
+tr[data-selected] {
+    background-color: lightblue;
+}
+
+td {
+    padding: 5px;
+}

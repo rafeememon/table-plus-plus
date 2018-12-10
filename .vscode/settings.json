@@ -1,0 +1,11 @@
+{
+    "files.exclude": {
+        ".gradle": true,
+        ".vscode": true,
+        "dist": true,
+        "gradle": true,
+        "node_modules": true
+    },
+    "tslint.autoFixOnSave": true,
+    "typescript.tsdk": "./node_modules/typescript/lib"
+}
