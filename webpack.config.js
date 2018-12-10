@@ -6,6 +6,7 @@ module.exports = {
   entry: {
     earthquakes: './src/demo/earthquakes/demo.ts',
     fourteeners: './src/demo/fourteeners/demo.ts',
+    'fourteeners-react': './src/demo/fourteeners/demo-react.tsx',
   },
 
   resolve: {
