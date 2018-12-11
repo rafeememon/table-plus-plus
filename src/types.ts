@@ -27,10 +27,10 @@ export interface ITableModel<
     Row extends ObjectWithKey<Key, KeyType>,
     KeyType = Row[Key],
 > {
-    getKeyField(): Key;
-    getRows(): Row[];
-    getColumns(): Array<IColumn<Row>>;
-    getSelection(): Set<KeyType>;
+    readonly keyField: Key;
+    readonly rows: Row[];
+    readonly columns: Array<IColumn<Row>>;
+    readonly selection: Set<KeyType>;
     setRows(newRows: Row[]): void;
     setColumns(newColumns: Array<IColumn<Row>>): void;
     setSelection(newSelection: Set<KeyType>): void;
@@ -56,7 +56,7 @@ export interface IViewConfig<
 }
 
 export interface ITableView {
-    getElement(): HTMLElement;
+    readonly element: HTMLElement;
     setRowClickHandler(handler: RowClickHandler): void;
     destroy(): void;
 }

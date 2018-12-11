@@ -21,10 +21,10 @@ export class TableModel<
     KeyType = Row[Key],
 > implements ITableModel<Key, Row, KeyType> {
 
-    private keyField: Key;
-    private rows: Row[];
-    private columns: Array<IColumn<Row>>;
-    private selection: Set<KeyType>;
+    public keyField: Key;
+    public rows: Row[];
+    public columns: Array<IColumn<Row>>;
+    public selection: Set<KeyType>;
 
     private rowListeners: Array<RowEventListener<Row>> = [];
     private columnListeners: Array<ColumnEventListener<Row>> = [];
@@ -35,22 +35,6 @@ export class TableModel<
         this.rows = config.rows;
         this.columns = config.columns;
         this.selection = config.selection;
-    }
-
-    public getKeyField() {
-        return this.keyField;
-    }
-
-    public getRows() {
-        return this.rows;
-    }
-
-    public getColumns() {
-        return this.columns;
-    }
-
-    public getSelection() {
-        return this.selection;
     }
 
     public setRows(newRows: Row[]) {

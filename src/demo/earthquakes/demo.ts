@@ -23,7 +23,7 @@ const view = new TableView({
 const header = document.createElement("h1");
 header.appendChild(document.createTextNode("All earthquakes in the past day"));
 document.body.appendChild(header);
-document.body.appendChild(view.getElement());
+document.body.appendChild(view.element);
 
 fetchEarthquakes().then((response) => {
     const features = response.features.map((f) => f.properties);

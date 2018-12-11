@@ -44,10 +44,11 @@ export class TableView<
     KeyType = Row[Key],
 > implements ITableView {
 
+    public element: HTMLTableElement;
+
     private model: ITableModel<Key, Row, KeyType>;
     private rowClickHandler: RowClickHandler;
 
-    private tableElement: HTMLTableElement;
     private theadTrElement: HTMLTableRowElement;
     private tbodyElement: HTMLTableSectionElement;
     private headerElements: Map<IColumn<Row>, HTMLTableHeaderCellElement> = new Map();
@@ -57,25 +58,21 @@ export class TableView<
         this.model = config.model;
         this.rowClickHandler = config.onClickRow;
 
-        this.tableElement = document.createElement("table");
+        this.element = document.createElement("table");
         const theadElement = document.createElement("thead");
         this.theadTrElement = document.createElement("tr");
         this.tbodyElement = document.createElement("tbody");
         theadElement.appendChild(this.theadTrElement);
-        this.tableElement.appendChild(theadElement);
-        this.tableElement.appendChild(this.tbodyElement);
+        this.element.appendChild(theadElement);
+        this.element.appendChild(this.tbodyElement);
 
         this.model.addRowListener(this.handleRowsChanged);
         this.model.addColumnListener(this.handleColumnsChanged);
         this.model.addSelectionListener(this.handleSelectionChanged);
-        this.tableElement.addEventListener("click", this.handleClick);
+        this.element.addEventListener("click", this.handleClick);
 
         this.renderThead();
         this.renderTbody();
-    }
-
-    public getElement() {
-        return this.tableElement;
     }
 
     public setRowClickHandler(handler: RowClickHandler) {
@@ -86,7 +83,7 @@ export class TableView<
         this.model.removeRowListener(this.handleRowsChanged);
         this.model.removeColumnListener(this.handleColumnsChanged);
         this.model.removeSelectionListener(this.handleSelectionChanged);
-        this.tableElement.removeEventListener("click", this.handleClick);
+        this.element.removeEventListener("click", this.handleClick);
     }
 
     private handleRowsChanged = () => {
@@ -100,9 +97,9 @@ export class TableView<
     }
 
     private handleSelectionChanged = (newSelection: Set<KeyType>, oldSelection: Set<KeyType>) => {
+        const { keyField, rows } = this.model;
         const keysToUpdate = union(newSelection, oldSelection);
-        const keyField = this.model.getKeyField();
-        for (const row of this.model.getRows()) {
+        for (const row of rows) {
             if (keysToUpdate.has(row[keyField])) {
                 this.decorateRowElement(row);
             }
@@ -117,7 +114,7 @@ export class TableView<
     }
 
     private renderThead() {
-        const headerElements = this.model.getColumns().map(this.getOrCreateHeaderElement);
+        const headerElements = this.model.columns.map(this.getOrCreateHeaderElement);
         renderChildNodes(this.theadTrElement, headerElements);
     }
 
@@ -134,7 +131,7 @@ export class TableView<
     }
 
     private renderTbody() {
-        const rowElements = this.model.getRows().map(this.getOrCreateRowElement);
+        const rowElements = this.model.rows.map(this.getOrCreateRowElement);
         renderChildNodes(this.tbodyElement, rowElements);
     }
 
@@ -146,7 +143,7 @@ export class TableView<
         }
 
         const tr = document.createElement("tr");
-        for (const column of this.model.getColumns()) {
+        for (const column of this.model.columns) {
             const td = document.createElement("td");
             const content = column.renderData ? column.renderData(row) :
                 column.getData ? column.getData(row) : String(row[column.key]);

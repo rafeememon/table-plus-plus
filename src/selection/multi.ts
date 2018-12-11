@@ -33,16 +33,14 @@ export class MultiSelectionAdapter<
     }
 
     private handleNormalRowClick(rowIndex: number) {
-        const rows = this.model.getRows();
-        const keyField = this.model.getKeyField();
+        const { rows, keyField } = this.model;
         this.anchorKey = rows[rowIndex][keyField];
         this.handler(new Set([this.anchorKey]));
     }
 
     private handleShiftRowClick(rowIndex: number) {
         if (this.anchorKey !== undefined) {
-            const rows = this.model.getRows();
-            const keyField = this.model.getKeyField();
+            const { rows, keyField } = this.model;
             const anchorIndex = findIndex(rows, (r) => r[keyField] === this.anchorKey);
             if (anchorIndex != null) {
                 const newSelection = new Set<KeyType>();
@@ -61,10 +59,9 @@ export class MultiSelectionAdapter<
     }
 
     private handleControlRowClick(rowIndex: number) {
-        const rows = this.model.getRows();
-        const keyField = this.model.getKeyField();
+        const { rows, keyField, selection } = this.model;
         this.anchorKey = rows[rowIndex][keyField];
-        const newSelection = new Set(this.model.getSelection());
+        const newSelection = new Set(selection);
         if (newSelection.has(this.anchorKey)) {
             newSelection.delete(this.anchorKey);
         } else {

@@ -100,7 +100,7 @@ export class Table<
 
     private handleRef = (element: HTMLElement | null) => {
         if (element) {
-            element.appendChild(this.view.getElement());
+            element.appendChild(this.view.element);
         }
     }
 

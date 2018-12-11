@@ -23,4 +23,4 @@ const view = new TableView({
 const header = document.createElement("h1");
 header.appendChild(document.createTextNode("California Fourteeners"));
 document.body.appendChild(header);
-document.body.appendChild(view.getElement());
+document.body.appendChild(view.element);
