@@ -1,7 +1,8 @@
-import { IColumn } from "../..";
+import * as React from "react";
+import { IReactColumn } from "../../react";
 import { IGeoJsonFeatureProperties } from "./types";
 
-export const COLUMNS: Array<IColumn<IGeoJsonFeatureProperties>> = [
+export const REACT_COLUMNS: Array<IReactColumn<IGeoJsonFeatureProperties>> = [
     {
         key: "time",
         label: "Time",
@@ -20,12 +21,8 @@ export const COLUMNS: Array<IColumn<IGeoJsonFeatureProperties>> = [
     {
         key: "url",
         label: "Info",
-        displayData({url}) {
-            const link = document.createElement("a");
-            link.appendChild(document.createTextNode("View"));
-            link.href = url;
-            link.target = "_blank";
-            return link;
+        renderData({url}) {
+            return <a href={url} target="blank">View</a>;
         },
     },
 ];

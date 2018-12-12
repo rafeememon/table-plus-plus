@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-    IColumn,
     ITableModel,
     ITableView,
     MultiSelectionAdapter,
@@ -12,6 +11,8 @@ import {
     TableModel,
     TableView,
 } from "..";
+import { CellPortals } from "./cell-portals";
+import { IReactColumn } from "./types";
 
 function createSelectionAdapter<
     Key extends keyof Row,
@@ -39,7 +40,7 @@ export interface ITableProps<
 > {
     keyField: Key;
     rows: Row[];
-    columns: Array<IColumn<Row>>;
+    columns: Array<IReactColumn<Row>>;
     selection?: Set<KeyType>;
     selectionMode?: SelectionMode;
     onSelect?(newSelection: Set<KeyType>): void;
@@ -95,7 +96,12 @@ export class Table<
     }
 
     public render() {
-        return <div ref={this.handleRef} />;
+        return (
+            <>
+                <div ref={this.handleRef} />
+                <CellPortals model={this.model} view={this.view} />
+            </>
+        );
     }
 
     private handleRef = (element: HTMLElement | null) => {

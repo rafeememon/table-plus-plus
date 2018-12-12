@@ -3,8 +3,10 @@ export type ObjectWithKey<K extends string | number | symbol, V> = { [T in K]: V
 export interface IColumn<Row> {
     key: keyof Row;
     label: string;
+    // Get data for both display and sort ordering.
     getData?(row: Row): string;
-    renderData?(row: Row): string | Node;
+    // Display data with no impact on sort ordering.
+    displayData?(row: Row): string | Node;
 }
 
 export interface ITableConfig<

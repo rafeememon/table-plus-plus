@@ -145,7 +145,7 @@ export class TableView<
         const tr = document.createElement("tr");
         for (const column of this.model.columns) {
             const td = document.createElement("td");
-            const content = column.renderData ? column.renderData(row) :
+            const content = column.displayData ? column.displayData(row) :
                 column.getData ? column.getData(row) : String(row[column.key]);
             const contentNode = typeof content === "string" ? document.createTextNode(content) : content;
             td.appendChild(contentNode);

@@ -2,35 +2,36 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Table } from "../../react";
 import { REACT_COLUMNS } from "./columns-react";
-import { FOURTEENERS } from "./data";
-import { IMountain } from "./types";
+import { fetchEarthquakes } from "./data";
+import { IGeoJsonFeatureProperties } from "./types";
 
 import "./styles.css";
 
 interface IState {
-    rows: IMountain[];
+    rows: IGeoJsonFeatureProperties[];
     selection: Set<string>;
 }
 
 class Demo extends React.PureComponent<{}, IState> {
 
     public state: IState = {
-        rows: FOURTEENERS,
+        rows: [],
         selection: new Set(),
     };
 
     public componentDidMount() {
-        setTimeout(() => {
-            this.setState({ rows: FOURTEENERS.slice(0, 5) });
-        }, 2000);
+        fetchEarthquakes().then((response) => {
+            const rows = response.features.map((f) => f.properties);
+            this.setState({ rows });
+        });
     }
 
     public render() {
         return (
             <>
-                <h1>California Fourteeners</h1>
+                <h1>All earthquakes in the past day</h1>
                 <Table
-                    keyField="name"
+                    keyField="code"
                     rows={this.state.rows}
                     columns={REACT_COLUMNS}
                     selection={this.state.selection}

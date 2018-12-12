@@ -1,7 +1,8 @@
-import { IColumn } from "../..";
+import * as React from "react";
+import { IReactColumn } from "../../react";
 import { IMountain } from "./types";
 
-export const COLUMNS: Array<IColumn<IMountain>> = [
+export const REACT_COLUMNS: Array<IReactColumn<IMountain>> = [
     {
         key: "name",
         label: "Name",
@@ -23,8 +24,8 @@ export const COLUMNS: Array<IColumn<IMountain>> = [
     {
         key: "climbed",
         label: "Climbed",
-        getData({climbed}) {
-            return climbed ? "Yes" : "No";
+        renderData({climbed}) {
+            return climbed ? <b>Yes</b> : <i>No</i>;
         },
     },
 ];
