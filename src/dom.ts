@@ -10,7 +10,9 @@ function appendOrReplaceChild(parent: HTMLElement, child: HTMLElement, index: nu
     if (index < parent.childElementCount) {
         // Replace existing child
         const childToReplace = parent.childNodes[index];
-        parent.replaceChild(child, childToReplace);
+        if (child !== childToReplace) {
+            parent.replaceChild(child, childToReplace);
+        }
     } else if (index === parent.childElementCount) {
         // Append next child
         parent.appendChild(child);
