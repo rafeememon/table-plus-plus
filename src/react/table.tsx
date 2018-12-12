@@ -14,7 +14,7 @@ import {
 import { CellPortals } from "./cell-portals";
 import { IReactColumn } from "./types";
 
-function createSelectionAdapter<
+function selectionAdapter<
     Key extends keyof Row,
     Row extends ObjectWithKey<Key, KeyType>,
     KeyType = Row[Key],
@@ -25,11 +25,11 @@ function createSelectionAdapter<
 ) {
     switch (mode) {
         case "single":
-            return new SingleSelectionAdapter(model, handler);
+            return new SingleSelectionAdapter(model, handler).handleRowClick;
         case "multi":
-            return new MultiSelectionAdapter(model, handler);
+            return new MultiSelectionAdapter(model, handler).handleRowClick;
         default:
-            return NOOP_SELECTION_ADAPTER;
+            return NOOP_SELECTION_ADAPTER.handleRowClick;
     }
 }
 
@@ -63,11 +63,9 @@ export class Table<
             columns: this.props.columns,
             selection: this.props.selection || new Set(),
         });
-        const selectionAdapter = createSelectionAdapter(
-            this.props.selectionMode, this.model, this.handleSelect);
         this.view = new TableView({
             model: this.model,
-            onClickRow: selectionAdapter.handleRowClick,
+            onClickRow: selectionAdapter(this.props.selectionMode, this.model, this.handleSelect),
         });
     }
 
@@ -91,7 +89,7 @@ export class Table<
             this.model.setSelection(selection || new Set());
         }
         if (selectionMode !== oldProps.selectionMode) {
-            throw new Error("changing selection mode not supported");
+            this.view.setRowClickHandler(selectionAdapter(selectionMode, this.model, this.handleSelect));
         }
     }
 

@@ -46,6 +46,11 @@ export interface ITableModel<
     destroy(): void;
 }
 
+export interface ICellRenderer<Row> {
+    mountCell(element: Element, row: Row, column: IColumn<Row>): void;
+    unmountCell?(element: Element, row: Row, column: IColumn<Row>): void;
+}
+
 export type RowClickHandler = (event: MouseEvent, rowIndex: number) => void;
 
 export interface IViewConfig<
@@ -54,6 +59,7 @@ export interface IViewConfig<
     KeyType = Row[Key],
 > {
     model: ITableModel<Key, Row, KeyType>;
+    cellRenderer?: ICellRenderer<Row>;
     onClickRow: RowClickHandler;
 }
 

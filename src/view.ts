@@ -1,5 +1,5 @@
 import { renderChildNodes } from "./dom";
-import { IColumn, ITableModel, ITableView, IViewConfig, ObjectWithKey, RowClickHandler } from "./types";
+import { ICellRenderer, IColumn, ITableModel, ITableView, IViewConfig, ObjectWithKey, RowClickHandler } from "./types";
 
 const SELECTED_ATTRIBUTE = "data-selected";
 
@@ -47,6 +47,7 @@ export class TableView<
     public element: HTMLTableElement;
 
     private model: ITableModel<Key, Row, KeyType>;
+    private cellRenderer: ICellRenderer<Row>;
     private rowClickHandler: RowClickHandler;
 
     private theadTrElement: HTMLTableRowElement;
@@ -56,6 +57,7 @@ export class TableView<
 
     public constructor(config: IViewConfig<Key, Row, KeyType>) {
         this.model = config.model;
+        this.cellRenderer = config.cellRenderer;
         this.rowClickHandler = config.onClickRow;
 
         this.element = document.createElement("table");
@@ -131,8 +133,14 @@ export class TableView<
     }
 
     private renderTbody() {
+        /*
         const rowElements = this.model.rows.map(this.getOrCreateRowElement);
         renderChildNodes(this.tbodyElement, rowElements);
+        */
+        const rowElements = [];
+        for (const row of this.model.rows) {
+            const rowElement = ;
+        }
     }
 
     private getOrCreateRowElement = (row: Row) => {
@@ -145,10 +153,13 @@ export class TableView<
         const tr = document.createElement("tr");
         for (const column of this.model.columns) {
             const td = document.createElement("td");
+            /*
             const content = column.displayData ? column.displayData(row) :
                 column.getData ? column.getData(row) : String(row[column.key]);
             const contentNode = typeof content === "string" ? document.createTextNode(content) : content;
             td.appendChild(contentNode);
+            */
+            this.cellRenderer.mountCell(td, row, column);
             tr.appendChild(td);
         }
         this.decorateRowElement(row, tr);
