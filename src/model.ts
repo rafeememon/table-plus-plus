@@ -1,11 +1,13 @@
 import {
     ColumnEventListener,
     IColumn,
+    ISort,
     ITableConfig,
     ITableModel,
     ObjectWithKey,
     RowEventListener,
     SelectionEventListener,
+    SortEventListener,
 } from "./types";
 
 function removeFromArray<T>(elements: T[], element: T) {
@@ -25,16 +27,19 @@ export class TableModel<
     public rows: Row[];
     public columns: Array<IColumn<Row>>;
     public selection: Set<KeyType>;
+    public sort: ISort<Row> | undefined;
 
     private rowListeners: Array<RowEventListener<Row>> = [];
     private columnListeners: Array<ColumnEventListener<Row>> = [];
     private selectionListeners: Array<SelectionEventListener<KeyType>> = [];
+    private sortListeners: Array<SortEventListener<Row>> = [];
 
     public constructor(config: ITableConfig<Key, Row, KeyType>) {
         this.keyField = config.keyField;
         this.rows = config.rows;
         this.columns = config.columns;
         this.selection = config.selection;
+        this.sort = config.sort;
     }
 
     public setRows(newRows: Row[]) {
@@ -61,6 +66,14 @@ export class TableModel<
         }
     }
 
+    public setSort(newSort: ISort<Row> | undefined) {
+        const oldSort = this.sort;
+        this.sort = newSort;
+        for (const listener of this.sortListeners) {
+            listener(newSort, oldSort);
+        }
+    }
+
     public isSelected(row: Row) {
         return this.selection.has(row[this.keyField]);
     }
@@ -77,6 +90,10 @@ export class TableModel<
         this.selectionListeners.push(listener);
     }
 
+    public addSortListener(listener: SortEventListener<Row>) {
+        this.sortListeners.push(listener);
+    }
+
     public removeRowListener(listener: RowEventListener<Row>) {
         removeFromArray(this.rowListeners, listener);
     }
@@ -89,10 +106,15 @@ export class TableModel<
         removeFromArray(this.selectionListeners, listener);
     }
 
+    public removeSortListener(listener: SortEventListener<Row>) {
+        removeFromArray(this.sortListeners, listener);
+    }
+
     public destroy() {
         this.rowListeners = [];
         this.columnListeners = [];
         this.selectionListeners = [];
+        this.sortListeners = [];
     }
 
 }

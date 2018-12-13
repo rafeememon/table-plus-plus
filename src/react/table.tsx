@@ -1,6 +1,7 @@
 import * as React from "react";
 import {
     IColumn,
+    ISort,
     ITableModel,
     ITableView,
     MultiSelectionAdapter,
@@ -9,6 +10,7 @@ import {
     SelectionHandler,
     SelectionMode,
     SingleSelectionAdapter,
+    SortAdapter,
     TableModel,
     TableView,
 } from "..";
@@ -42,7 +44,9 @@ export interface ITableProps<
     columns: Array<IColumn<Row>>;
     selection?: Set<KeyType>;
     selectionMode?: SelectionMode;
+    sort?: ISort<Row>;
     onSelect?(newSelection: Set<KeyType>): void;
+    onSort?(newSort: ISort<Row>): void;
 }
 
 export class Table<
@@ -61,12 +65,14 @@ export class Table<
             rows: this.props.rows,
             columns: this.props.columns,
             selection: this.props.selection || new Set(),
+            sort: this.props.sort,
         });
-        const selectionAdapter = createSelectionAdapter(
-            this.props.selectionMode, this.model, this.handleSelect);
+        const selectionAdapter = createSelectionAdapter(this.props.selectionMode, this.model, this.handleSelect);
+        const sortAdapter = new SortAdapter(this.model, this.handleSort);
         this.view = new TableView({
             model: this.model,
             onClickRow: selectionAdapter.handleRowClick,
+            onClickHeader: sortAdapter.handleHeaderClick,
         });
     }
 
@@ -76,7 +82,7 @@ export class Table<
     }
 
     public componentDidUpdate(oldProps: ITableProps<Key, Row, KeyType>) {
-        const { keyField, rows, columns, selection, selectionMode } = this.props;
+        const { keyField, rows, columns, selection, selectionMode, sort } = this.props;
         if (keyField !== oldProps.keyField) {
             throw new Error("changing key field not supported");
         }
@@ -91,6 +97,9 @@ export class Table<
         }
         if (selectionMode !== oldProps.selectionMode) {
             throw new Error("changing selection mode not supported");
+        }
+        if (sort !== oldProps.sort) {
+            this.model.setSort(sort);
         }
     }
 
@@ -108,6 +117,13 @@ export class Table<
         const { onSelect } = this.props;
         if (onSelect) {
             onSelect(newSelection);
+        }
+    }
+
+    private handleSort = (newSort: ISort<Row>) => {
+        const { onSort } = this.props;
+        if (onSort) {
+            onSort(newSort);
         }
     }
 

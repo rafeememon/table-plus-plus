@@ -1,5 +1,13 @@
 import { renderChildNodes } from "./dom";
-import { IColumn, ITableModel, ITableView, IViewConfig, ObjectWithKey, RowClickHandler } from "./types";
+import {
+    HeaderClickHandler,
+    IColumn,
+    ITableModel,
+    ITableView,
+    IViewConfig,
+    ObjectWithKey,
+    RowClickHandler,
+} from "./types";
 
 const SELECTED_ATTRIBUTE = "data-selected";
 
@@ -38,6 +46,16 @@ function getClickedRowIndex(event: MouseEvent) {
     return null;
 }
 
+function getClickedHeaderIndex(event: MouseEvent) {
+    if (event.target instanceof Element) {
+        const th = findParentElementOfType(event.target, "TH");
+        if (th) {
+            return getChildIndex(th);
+        }
+    }
+    return null;
+}
+
 export class TableView<
     Key extends keyof Row,
     Row extends ObjectWithKey<Key, KeyType>,
@@ -48,6 +66,7 @@ export class TableView<
 
     private model: ITableModel<Key, Row, KeyType>;
     private rowClickHandler: RowClickHandler;
+    private headerClickHandler: HeaderClickHandler;
 
     private theadTrElement: HTMLTableRowElement;
     private tbodyElement: HTMLTableSectionElement;
@@ -57,6 +76,7 @@ export class TableView<
     public constructor(config: IViewConfig<Key, Row, KeyType>) {
         this.model = config.model;
         this.rowClickHandler = config.onClickRow;
+        this.headerClickHandler = config.onClickHeader;
 
         this.element = document.createElement("table");
         const theadElement = document.createElement("thead");
@@ -73,10 +93,6 @@ export class TableView<
 
         this.renderThead();
         this.renderTbody();
-    }
-
-    public setRowClickHandler(handler: RowClickHandler) {
-        this.rowClickHandler = handler;
     }
 
     public destroy() {
@@ -110,6 +126,13 @@ export class TableView<
         const rowIndex = getClickedRowIndex(event);
         if (rowIndex != null) {
             this.rowClickHandler(event, rowIndex);
+            return;
+        }
+
+        const headerIndex = getClickedHeaderIndex(event);
+        if (headerIndex != null) {
+            this.headerClickHandler(event, headerIndex);
+            return;
         }
     }
 
