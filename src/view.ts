@@ -2,6 +2,7 @@ import { renderChildNodes } from "./dom";
 import {
     HeaderClickHandler,
     IColumn,
+    ISort,
     ITableModel,
     ITableView,
     IViewConfig,
@@ -10,6 +11,7 @@ import {
 } from "./types";
 
 const SELECTED_ATTRIBUTE = "data-selected";
+const SORT_ARROW_CLASSNAME = "sort-arrow";
 
 function union<T>(set1: Set<T>, set2: Set<T>) {
     const all = new Set(set1);
@@ -89,6 +91,7 @@ export class TableView<
         this.model.addRowListener(this.handleRowsChanged);
         this.model.addColumnListener(this.handleColumnsChanged);
         this.model.addSelectionListener(this.handleSelectionChanged);
+        this.model.addSortListener(this.handleSortChanged);
         this.element.addEventListener("click", this.handleClick);
 
         this.renderThead();
@@ -99,6 +102,7 @@ export class TableView<
         this.model.removeRowListener(this.handleRowsChanged);
         this.model.removeColumnListener(this.handleColumnsChanged);
         this.model.removeSelectionListener(this.handleSelectionChanged);
+        this.model.removeSortListener(this.handleSortChanged);
         this.element.removeEventListener("click", this.handleClick);
     }
 
@@ -120,6 +124,22 @@ export class TableView<
                 this.decorateRowElement(row);
             }
         }
+    }
+
+    private handleSortChanged = (newSort: ISort<Row> | undefined, oldSort: ISort<Row> | undefined) => {
+        const keys = new Set<keyof Row>();
+        if (newSort) {
+            keys.add(newSort.key);
+        }
+        if (oldSort) {
+            keys.add(oldSort.key);
+        }
+        keys.forEach((key) => {
+            const column = this.model.columns.find((c) => c.key === key);
+            if (column) {
+                this.decorateHeaderElement(column);
+            }
+        });
     }
 
     private handleClick = (event: MouseEvent) => {
@@ -144,11 +164,13 @@ export class TableView<
     private getOrCreateHeaderElement = (column: IColumn<Row>) => {
         const existingTh = this.headerElements.get(column);
         if (existingTh) {
+            this.decorateHeaderElement(column, existingTh);
             return existingTh;
         }
 
         const th = document.createElement("th");
         th.appendChild(document.createTextNode(column.label));
+        this.decorateHeaderElement(column, th);
         this.headerElements.set(column, th);
         return th;
     }
@@ -188,6 +210,27 @@ export class TableView<
             tr.setAttribute(SELECTED_ATTRIBUTE, "true");
         } else {
             tr.removeAttribute(SELECTED_ATTRIBUTE);
+        }
+    }
+
+    private decorateHeaderElement(column: IColumn<Row>, th = this.headerElements.get(column)) {
+        if (!th) {
+            return;
+        }
+
+        const { sort } = this.model;
+        const oldArrow = th.getElementsByClassName(SORT_ARROW_CLASSNAME).item(0);
+        if (sort && sort.key === column.key) {
+            const arrow = document.createElement("span");
+            arrow.classList.add(SORT_ARROW_CLASSNAME);
+            arrow.appendChild(document.createTextNode(sort.ascending ? " ↑" : " ↓"));
+            if (oldArrow) {
+                th.replaceChild(arrow, oldArrow);
+            } else {
+                th.appendChild(arrow);
+            }
+        } else if (oldArrow) {
+            oldArrow.remove();
         }
     }
 
