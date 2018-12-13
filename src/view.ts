@@ -117,9 +117,9 @@ export class TableView<
     }
 
     private handleSelectionChanged = (newSelection: Set<KeyType>, oldSelection: Set<KeyType>) => {
-        const { keyField, rows } = this.model;
+        const { keyField, sortedRows } = this.model;
         const keysToUpdate = union(newSelection, oldSelection);
-        for (const row of rows) {
+        for (const row of sortedRows) {
             if (keysToUpdate.has(row[keyField])) {
                 this.decorateRowElement(row);
             }
@@ -140,6 +140,8 @@ export class TableView<
                 this.decorateHeaderElement(column);
             }
         });
+
+        this.renderTbody();
     }
 
     private handleClick = (event: MouseEvent) => {
@@ -176,7 +178,7 @@ export class TableView<
     }
 
     private renderTbody() {
-        const rowElements = this.model.rows.map(this.getOrCreateRowElement);
+        const rowElements = this.model.sortedRows.map(this.getOrCreateRowElement);
         renderChildNodes(this.tbodyElement, rowElements);
     }
 

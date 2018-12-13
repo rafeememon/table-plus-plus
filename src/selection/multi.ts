@@ -33,21 +33,21 @@ export class MultiSelectionAdapter<
     }
 
     private handleNormalRowClick(rowIndex: number) {
-        const { rows, keyField } = this.model;
-        this.anchorKey = rows[rowIndex][keyField];
+        const { sortedRows, keyField } = this.model;
+        this.anchorKey = sortedRows[rowIndex][keyField];
         this.handler(new Set([this.anchorKey]));
     }
 
     private handleShiftRowClick(rowIndex: number) {
         if (this.anchorKey !== undefined) {
-            const { rows, keyField } = this.model;
-            const anchorIndex = findIndex(rows, (r) => r[keyField] === this.anchorKey);
+            const { sortedRows, keyField } = this.model;
+            const anchorIndex = findIndex(sortedRows, (r) => r[keyField] === this.anchorKey);
             if (anchorIndex != null) {
                 const newSelection = new Set<KeyType>();
                 const min = Math.min(rowIndex, anchorIndex);
                 const max = Math.max(rowIndex, anchorIndex);
                 for (let index = min; index <= max; index++) {
-                    newSelection.add(rows[index][keyField]);
+                    newSelection.add(sortedRows[index][keyField]);
                 }
                 this.handler(newSelection);
             } else {
@@ -59,8 +59,8 @@ export class MultiSelectionAdapter<
     }
 
     private handleControlRowClick(rowIndex: number) {
-        const { rows, keyField, selection } = this.model;
-        this.anchorKey = rows[rowIndex][keyField];
+        const { sortedRows, keyField, selection } = this.model;
+        this.anchorKey = sortedRows[rowIndex][keyField];
         const newSelection = new Set(selection);
         if (newSelection.has(this.anchorKey)) {
             newSelection.delete(this.anchorKey);

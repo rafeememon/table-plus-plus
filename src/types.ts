@@ -4,6 +4,7 @@ export interface IColumn<Row> {
     key: keyof Row;
     label: string;
     getData?(row: Row): string;
+    getSortValue?(row: Row): any;
     renderData?(row: Row): string | Node;
 }
 
@@ -35,10 +36,10 @@ export interface ITableModel<
     KeyType = Row[Key],
 > {
     readonly keyField: Key;
-    readonly rows: Row[];
     readonly columns: Array<IColumn<Row>>;
     readonly selection: Set<KeyType>;
     readonly sort: ISort<Row> | undefined;
+    readonly sortedRows: Row[];
     setRows(newRows: Row[]): void;
     setColumns(newColumns: Array<IColumn<Row>>): void;
     setSelection(newSelection: Set<KeyType>): void;
