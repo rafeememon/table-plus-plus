@@ -21,8 +21,8 @@
     "dist"
   ],
   "devDependencies": {
-    "@types/react": "16.0.40",
-    "@types/react-dom": "16.0.4",
+    "@types/react": "^16.7.1",
+    "@types/react-dom": "^16.0.11",
     "css-loader": "^0.28.11",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
