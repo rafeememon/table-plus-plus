@@ -1,4 +1,3 @@
-import { renderChildNodes } from "./dom";
 import {
     HeaderClickHandler,
     IColumn,
@@ -8,7 +7,9 @@ import {
     IViewConfig,
     ObjectWithKey,
     RowClickHandler,
-} from "./types";
+} from "../types";
+import { renderChildNodes } from "./dom";
+import { getClickedHeaderIndex, getClickedRowIndex } from "./events";
 
 const SELECTED_ATTRIBUTE = "data-selected";
 const SORT_ARROW_CLASSNAME = "sort-arrow";
@@ -17,45 +18,6 @@ function union<T>(set1: Set<T>, set2: Set<T>) {
     const all = new Set(set1);
     set2.forEach((el) => all.add(el));
     return all;
-}
-
-function findParentElementOfType(element: Element | null, tagName: string) {
-    let e: Element | null = element;
-    while (e && e.tagName !== tagName) {
-        e = e.parentElement;
-    }
-    return e;
-}
-
-function getChildIndex(element: Node) {
-    let e: Node | null = element;
-    let count = 0;
-    while (e && e.previousSibling) {
-        e = e.previousSibling;
-        count++;
-    }
-    return count;
-}
-
-function getClickedRowIndex(event: MouseEvent) {
-    if (event.target instanceof Element) {
-        const tr = findParentElementOfType(event.target, "TR");
-        const tbody = findParentElementOfType(tr, "TBODY");
-        if (tbody && tr) {
-            return getChildIndex(tr);
-        }
-    }
-    return null;
-}
-
-function getClickedHeaderIndex(event: MouseEvent) {
-    if (event.target instanceof Element) {
-        const th = findParentElementOfType(event.target, "TH");
-        if (th) {
-            return getChildIndex(th);
-        }
-    }
-    return null;
 }
 
 export class TableView<
