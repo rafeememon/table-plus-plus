@@ -1,4 +1,4 @@
-import { MultiSelectionAdapter, TableModel, TableView } from "../..";
+import { MultiSelectionAdapter, SortAdapter, TableModel, TableView } from "../..";
 import { COLUMNS } from "./columns";
 import { FOURTEENERS } from "./data";
 
@@ -15,9 +15,14 @@ const selectionAdapter = new MultiSelectionAdapter(model, (newSelection) => {
     model.setSelection(newSelection);
 });
 
+const sortAdapter = new SortAdapter(model, (newSort) => {
+    model.setSort(newSort);
+});
+
 const view = new TableView({
     model,
     onClickRow: selectionAdapter.handleRowClick,
+    onClickHeader: sortAdapter.handleHeaderClick,
 });
 
 const header = document.createElement("h1");

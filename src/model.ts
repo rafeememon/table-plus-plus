@@ -1,11 +1,13 @@
 import {
     ColumnEventListener,
     IColumn,
+    ISort,
     ITableConfig,
     ITableModel,
     ObjectWithKey,
     RowEventListener,
     SelectionEventListener,
+    SortEventListener,
 } from "./types";
 
 function removeFromArray<T>(elements: T[], element: T) {
@@ -22,24 +24,30 @@ export class TableModel<
 > implements ITableModel<Key, Row, KeyType> {
 
     public keyField: Key;
-    public rows: Row[];
     public columns: Array<IColumn<Row>>;
     public selection: Set<KeyType>;
+    public sort: ISort<Row> | undefined;
+    public sortedRows: Row[];
 
+    private rows: Row[];
     private rowListeners: Array<RowEventListener<Row>> = [];
     private columnListeners: Array<ColumnEventListener<Row>> = [];
     private selectionListeners: Array<SelectionEventListener<KeyType>> = [];
+    private sortListeners: Array<SortEventListener<Row>> = [];
 
     public constructor(config: ITableConfig<Key, Row, KeyType>) {
         this.keyField = config.keyField;
         this.rows = config.rows;
         this.columns = config.columns;
         this.selection = config.selection;
+        this.sort = config.sort;
+        this.sortedRows = this.sortRows();
     }
 
     public setRows(newRows: Row[]) {
         const oldRows = this.rows;
         this.rows = newRows;
+        this.sortedRows = this.sortRows();
         for (const listener of this.rowListeners) {
             listener(newRows, oldRows);
         }
@@ -61,6 +69,21 @@ export class TableModel<
         }
     }
 
+    public setSort(newSort: ISort<Row> | undefined) {
+        const oldSort = this.sort;
+        this.sort = newSort;
+
+        if (oldSort && newSort && oldSort.key === newSort.key && oldSort.ascending !== newSort.ascending) {
+            this.sortedRows.reverse();
+        } else {
+            this.sortedRows = this.sortRows();
+        }
+
+        for (const listener of this.sortListeners) {
+            listener(newSort, oldSort);
+        }
+    }
+
     public isSelected(row: Row) {
         return this.selection.has(row[this.keyField]);
     }
@@ -77,6 +100,10 @@ export class TableModel<
         this.selectionListeners.push(listener);
     }
 
+    public addSortListener(listener: SortEventListener<Row>) {
+        this.sortListeners.push(listener);
+    }
+
     public removeRowListener(listener: RowEventListener<Row>) {
         removeFromArray(this.rowListeners, listener);
     }
@@ -89,10 +116,41 @@ export class TableModel<
         removeFromArray(this.selectionListeners, listener);
     }
 
+    public removeSortListener(listener: SortEventListener<Row>) {
+        removeFromArray(this.sortListeners, listener);
+    }
+
     public destroy() {
         this.rowListeners = [];
         this.columnListeners = [];
         this.selectionListeners = [];
+        this.sortListeners = [];
+    }
+
+    private sortRows(): Row[] {
+        const { rows, columns, sort } = this;
+        if (!sort) {
+            return rows;
+        }
+        const { key } = sort;
+        const column = columns.find((c) => c.key === key);
+        if (!column) {
+            return rows;
+        }
+
+        const sortValues = new Map<Row, any>();
+        for (const row of rows) {
+            const sortValue = column.getSortValue ? column.getSortValue(row)
+                : column.getData ? column.getData(row) : row[key];
+            sortValues.set(row, sortValue);
+        }
+
+        const ascendingFactor = sort.ascending ? 1 : -1;
+        return rows.slice(0).sort((row1, row2) => {
+            const value1 = sortValues.get(row1);
+            const value2 = sortValues.get(row2);
+            return value1 === value2 ? 0 : value1 < value2 ? -ascendingFactor : ascendingFactor;
+        });
     }
 
 }

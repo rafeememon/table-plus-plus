@@ -12,8 +12,8 @@ export class SingleSelectionAdapter<
     ) {}
 
     public handleRowClick = (_event: MouseEvent, rowIndex: number) => {
-        const { rows, keyField, selection } = this.model;
-        const key = rows[rowIndex][keyField];
+        const { sortedRows, keyField, selection } = this.model;
+        const key = sortedRows[rowIndex][keyField];
         const newSelection = new Set<KeyType>();
         if (!selection.has(key)) {
             newSelection.add(key);
