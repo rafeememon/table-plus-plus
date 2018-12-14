@@ -87,3 +87,6 @@ export type SortHandler<Row> = (newSort: ISort<Row>) => void;
 export interface ISortAdapter {
     handleHeaderClick: HeaderClickHandler;
 }
+
+export type HeaderDecorator<Row> = (column: IColumn<Row>, th: HTMLTableHeaderCellElement) => void;
+export type RowDecorator<Row> = (row: Row, tr: HTMLTableRowElement) => void;

@@ -1,5 +1,6 @@
 import {
     HeaderClickHandler,
+    HeaderDecorator,
     IColumn,
     ISort,
     ITableModel,
@@ -7,12 +8,11 @@ import {
     IViewConfig,
     ObjectWithKey,
     RowClickHandler,
+    RowDecorator,
 } from "../types";
+import { selectionDecorator, sortDecorator } from "./decorators";
 import { renderChildNodes } from "./dom";
 import { getClickedHeaderIndex, getClickedRowIndex } from "./events";
-
-const SELECTED_ATTRIBUTE = "data-selected";
-const SORT_ARROW_CLASSNAME = "sort-arrow";
 
 function union<T>(set1: Set<T>, set2: Set<T>) {
     const all = new Set(set1);
@@ -34,6 +34,8 @@ export class TableView<
 
     private theadTrElement: HTMLTableRowElement;
     private tbodyElement: HTMLTableSectionElement;
+    private headerDecorators: Array<HeaderDecorator<Row>>;
+    private rowDecorators: Array<RowDecorator<Row>>;
     private headerElements: Map<IColumn<Row>, HTMLTableHeaderCellElement> = new Map();
     private rowElements: Map<Row, HTMLTableRowElement> = new Map();
 
@@ -41,6 +43,13 @@ export class TableView<
         this.model = config.model;
         this.rowClickHandler = config.onClickRow;
         this.headerClickHandler = config.onClickHeader;
+
+        this.headerDecorators = [
+            sortDecorator(this.model),
+        ];
+        this.rowDecorators = [
+            selectionDecorator(this.model),
+        ];
 
         this.element = document.createElement("table");
         const theadElement = document.createElement("thead");
@@ -139,6 +148,15 @@ export class TableView<
         return th;
     }
 
+    private decorateHeaderElement(column: IColumn<Row>, th = this.headerElements.get(column)) {
+        if (!th) {
+            return;
+        }
+        for (const headerDecorator of this.headerDecorators) {
+            headerDecorator(column, th);
+        }
+    }
+
     private renderTbody() {
         const rowElements = this.model.sortedRows.map(this.getOrCreateRowElement);
         renderChildNodes(this.tbodyElement, rowElements);
@@ -169,32 +187,8 @@ export class TableView<
         if (!tr) {
             return;
         }
-
-        if (this.model.isSelected(row)) {
-            tr.setAttribute(SELECTED_ATTRIBUTE, "true");
-        } else {
-            tr.removeAttribute(SELECTED_ATTRIBUTE);
-        }
-    }
-
-    private decorateHeaderElement(column: IColumn<Row>, th = this.headerElements.get(column)) {
-        if (!th) {
-            return;
-        }
-
-        const { sort } = this.model;
-        const oldArrow = th.getElementsByClassName(SORT_ARROW_CLASSNAME).item(0);
-        if (sort && sort.key === column.key) {
-            const arrow = document.createElement("span");
-            arrow.classList.add(SORT_ARROW_CLASSNAME);
-            arrow.appendChild(document.createTextNode(sort.ascending ? " ↑" : " ↓"));
-            if (oldArrow) {
-                th.replaceChild(arrow, oldArrow);
-            } else {
-                th.appendChild(arrow);
-            }
-        } else if (oldArrow) {
-            oldArrow.remove();
+        for (const rowDecorator of this.rowDecorators) {
+            rowDecorator(row, tr);
         }
     }
 
