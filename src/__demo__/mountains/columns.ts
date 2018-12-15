@@ -5,6 +5,9 @@ export const MOUNTAIN_COLUMNS: Array<IColumn<IMountain>> = [
     {
         key: "name",
         label: "Name",
+        getSortValue({name}) {
+            return name.startsWith("Mount ") ? name.substr(6) : name;
+        },
     },
     {
         key: "elevationFt",
@@ -25,6 +28,9 @@ export const MOUNTAIN_COLUMNS: Array<IColumn<IMountain>> = [
         label: "Climbed",
         getData({climbed}) {
             return climbed ? "Yes" : "No";
+        },
+        getSortValue({climbed}) {
+            return climbed ? 0 : 1;
         },
     },
 ];
