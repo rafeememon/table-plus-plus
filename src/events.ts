@@ -11,8 +11,7 @@ export function getClickedHeaderIndex(event: MouseEvent) {
 export function getClickedRowIndex(event: MouseEvent) {
     if (event.target instanceof Element) {
         const tr = findParentElementOfType(event.target, "TR");
-        const tbody = findParentElementOfType(tr, "TBODY");
-        if (tbody && tr) {
+        if (tr && tr.parentElement && tr.parentElement.tagName === "TBODY") {
             return getChildIndex(tr);
         }
     }
