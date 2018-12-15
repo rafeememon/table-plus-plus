@@ -1,6 +1,6 @@
 import { IMountain } from "./types";
 
-export const FOURTEENERS: IMountain[] = [
+const MOUNTAINS: IMountain[] = [
     {
         name: "Mount Whitney",
         elevationFt: 14498,
@@ -67,4 +67,43 @@ export const FOURTEENERS: IMountain[] = [
         prominenceFt: 1085,
         climbed: false,
     },
+    {
+        name: "San Gorgonio Mountain",
+        elevationFt: 11499,
+        prominenceFt: 8294,
+        climbed: false,
+    },
+    {
+        name: "Telescope Peak",
+        elevationFt: 11048,
+        prominenceFt: 6168,
+        climbed: false,
+    },
+    {
+        name: "San Jacinto Peak",
+        elevationFt: 10839,
+        prominenceFt: 8319,
+        climbed: false,
+    },
+    {
+        name: "Lassen Peak",
+        elevationFt: 10457,
+        prominenceFt: 5229,
+        climbed: false,
+    },
+    {
+        name: "Mount San Antonio",
+        elevationFt: 10064,
+        prominenceFt: 6224,
+        climbed: false,
+    },
+    {
+        name: "Mount Eddy",
+        elevationFt: 9025,
+        prominenceFt: 5105,
+        climbed: false,
+    },
 ];
+
+export const FOURTEENERS = MOUNTAINS.filter((m) => m.elevationFt >= 14000);
+export const ULTRAS = MOUNTAINS.filter((m) => m.prominenceFt >= 5000);

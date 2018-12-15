@@ -1,7 +1,7 @@
 import { IColumn } from "../..";
 import { IMountain } from "./types";
 
-export const COLUMNS: Array<IColumn<IMountain>> = [
+export const MOUNTAIN_COLUMNS: Array<IColumn<IMountain>> = [
     {
         key: "name",
         label: "Name",
