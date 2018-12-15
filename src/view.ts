@@ -159,36 +159,56 @@ export class TableView<
     }
 
     private renderThead() {
-        const headerElements = this.model.columns.map(this.getOrCreateHeaderElement);
-        renderChildNodes(this.theadTrElement, headerElements);
-    }
+        const removedColumns = new Set(this.headerElements.keys());
+        const headerElementList = [];
 
-    private getOrCreateHeaderElement = (column: IColumn<Row>) => {
-        const existingTh = this.headerElements.get(column);
-        if (existingTh) {
-            this.decorateHeaderElement(column, existingTh);
-            return existingTh;
+        for (const column of this.model.columns) {
+            let headerElement = this.headerElements.get(column);
+            if (!headerElement) {
+                headerElement = this.createHeaderElement(column);
+                this.headerElements.set(column, headerElement);
+            }
+            this.decorateHeaderElement(column, headerElement);
+            headerElementList.push(headerElement);
+            removedColumns.delete(column);
         }
 
+        removedColumns.forEach((removedColumn) => {
+            this.headerElements.delete(removedColumn);
+        });
+
+        renderChildNodes(this.theadTrElement, headerElementList);
+    }
+
+    private createHeaderElement(column: IColumn<Row>) {
         const th = document.createElement("th");
         th.appendChild(document.createTextNode(column.label));
-        this.decorateHeaderElement(column, th);
-        this.headerElements.set(column, th);
         return th;
     }
 
     private renderTbody() {
-        const rowElements = this.model.sortedRows.map(this.getOrCreateRowElement);
-        renderChildNodes(this.tbodyElement, rowElements);
-    }
+        const removedRows = new Set(this.rowElements.keys());
+        const rowElementList = [];
 
-    private getOrCreateRowElement = (row: Row) => {
-        const existingTr = this.rowElements.get(row);
-        if (existingTr) {
-            this.decorateRowElement(row, existingTr);
-            return existingTr;
+        for (const row of this.model.sortedRows) {
+            let rowElement = this.rowElements.get(row);
+            if (!rowElement) {
+                rowElement = this.createRowElement(row);
+                this.rowElements.set(row, rowElement);
+            }
+            this.decorateRowElement(row, rowElement);
+            rowElementList.push(rowElement);
+            removedRows.delete(row);
         }
 
+        removedRows.forEach((removedRow) => {
+            this.rowElements.delete(removedRow);
+        });
+
+        renderChildNodes(this.tbodyElement, rowElementList);
+    }
+
+    private createRowElement(row: Row) {
         const tr = document.createElement("tr");
         for (const column of this.model.columns) {
             const td = document.createElement("td");
@@ -198,8 +218,6 @@ export class TableView<
             td.appendChild(contentNode);
             tr.appendChild(td);
         }
-        this.decorateRowElement(row, tr);
-        this.rowElements.set(row, tr);
         return tr;
     }
 
