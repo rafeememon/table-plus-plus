@@ -4,10 +4,10 @@ module.exports = {
   mode: 'development',
 
   entry: {
-    earthquakes: './src/demo/earthquakes/demo.ts',
-    'earthquakes-react': './src/demo/earthquakes/demo-react.tsx',
-    fourteeners: './src/demo/fourteeners/demo.ts',
-    'fourteeners-react': './src/demo/fourteeners/demo-react.tsx',
+    earthquakes: './src/__demo__/earthquakes/demo.ts',
+    'earthquakes-react': './src/__demo__/earthquakes/demo-react.tsx',
+    mountains: './src/__demo__/mountains/demo.ts',
+    'mountains-react': './src/__demo__/mountains/demo-react.tsx',
   },
 
   resolve: {

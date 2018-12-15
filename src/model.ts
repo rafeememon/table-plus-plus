@@ -1,3 +1,4 @@
+import { sortBy } from "./sort";
 import {
     ColumnEventListener,
     IColumn,
@@ -39,7 +40,7 @@ export class TableModel<
         this.keyField = config.keyField;
         this.rows = config.rows;
         this.columns = config.columns;
-        this.selection = config.selection;
+        this.selection = config.selection || new Set();
         this.sort = config.sort;
         this.sortedRows = this.sortRows();
     }
@@ -56,6 +57,16 @@ export class TableModel<
     public setColumns(newColumns: Array<IColumn<Row>>) {
         const oldColumns = this.columns;
         this.columns = newColumns;
+
+        const { sort } = this;
+        if (sort) {
+            const oldSortColumn = oldColumns.find((c) => c.key === sort.key);
+            const newSortColumn = newColumns.find((c) => c.key === sort.key);
+            if (oldSortColumn !== newSortColumn) {
+                this.sortedRows = this.sortRows();
+            }
+        }
+
         for (const listener of this.columnListeners) {
             listener(newColumns, oldColumns);
         }
@@ -138,19 +149,10 @@ export class TableModel<
             return rows;
         }
 
-        const sortValues = new Map<Row, any>();
-        for (const row of rows) {
-            const sortValue = column.getSortValue ? column.getSortValue(row)
+        return sortBy(rows, (row) => {
+            return column.getSortValue ? column.getSortValue(row)
                 : column.getData ? column.getData(row) : row[key];
-            sortValues.set(row, sortValue);
-        }
-
-        const ascendingFactor = sort.ascending ? 1 : -1;
-        return rows.slice(0).sort((row1, row2) => {
-            const value1 = sortValues.get(row1);
-            const value2 = sortValues.get(row2);
-            return value1 === value2 ? 0 : value1 < value2 ? -ascendingFactor : ascendingFactor;
-        });
+        }, sort.ascending);
     }
 
 }

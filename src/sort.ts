@@ -19,3 +19,17 @@ export class SortAdapter<
     }
 
 }
+
+export function sortBy<T>(elements: T[], getSortValue: (element: T) => any, ascending: boolean) {
+    const sortValues = new Map<T, any>();
+    for (const element of elements) {
+        sortValues.set(element, getSortValue(element));
+    }
+
+    const ascendingFactor = ascending ? 1 : -1;
+    return elements.slice(0).sort((element1, element2) => {
+        const value1 = sortValues.get(element1);
+        const value2 = sortValues.get(element2);
+        return value1 === value2 ? 0 : value1 < value2 ? -ascendingFactor : ascendingFactor;
+    });
+}

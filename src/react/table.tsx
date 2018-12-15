@@ -64,7 +64,7 @@ export class Table<
             keyField: this.props.keyField,
             rows: this.props.rows,
             columns: this.props.columns,
-            selection: this.props.selection || new Set(),
+            selection: this.props.selection,
             sort: this.props.sort,
         });
         const selectionAdapter = createSelectionAdapter(this.props.selectionMode, this.model, this.handleSelect);

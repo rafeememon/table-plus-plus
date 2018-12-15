@@ -21,7 +21,7 @@ export interface ITableConfig<
     keyField: Key;
     rows: Row[];
     columns: Array<IColumn<Row>>;
-    selection: Set<KeyType>;
+    selection?: Set<KeyType>;
     sort?: ISort<Row>;
 }
 
