@@ -74,6 +74,11 @@ export interface ITableView {
     destroy(): void;
 }
 
+export interface ITableSectionView {
+    readonly element: HTMLElement;
+    destroy(): void;
+}
+
 export type SelectionMode = "none" | "single" | "multi";
 
 export type SelectionHandler<KeyType> = (newSelection: Set<KeyType>) => void;
