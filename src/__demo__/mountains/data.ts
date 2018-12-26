@@ -71,7 +71,7 @@ const MOUNTAINS: IMountain[] = [
         name: "San Gorgonio Mountain",
         elevationFt: 11499,
         prominenceFt: 8294,
-        climbed: false,
+        climbed: true,
     },
     {
         name: "Telescope Peak",
@@ -83,7 +83,7 @@ const MOUNTAINS: IMountain[] = [
         name: "San Jacinto Peak",
         elevationFt: 10839,
         prominenceFt: 8319,
-        climbed: false,
+        climbed: true,
     },
     {
         name: "Lassen Peak",
@@ -95,7 +95,7 @@ const MOUNTAINS: IMountain[] = [
         name: "Mount San Antonio",
         elevationFt: 10064,
         prominenceFt: 6224,
-        climbed: false,
+        climbed: true,
     },
     {
         name: "Mount Eddy",
