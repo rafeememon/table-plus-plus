@@ -1,4 +1,4 @@
-import { renderChildNodes } from "./dom";
+import { replaceWith } from "./dom";
 import { getClickedRowIndex } from "./events";
 import { ITableModel, ITableSectionView, ObjectWithKey, RowClickHandler } from "./types";
 
@@ -23,32 +23,28 @@ export class TableBodyView<
         private model: ITableModel<Key, Row, KeyType>,
         private clickHandler: RowClickHandler,
     ) {
-        this.element = document.createElement("tbody");
-
+        this.element = this.createTbodyElement();
         this.model.addRowListener(this.handleRowsChanged);
         this.model.addColumnListener(this.handleColumnsChanged);
         this.model.addSelectionListener(this.handleSelectionChanged);
         this.model.addSortListener(this.handleSortChanged);
-        this.element.addEventListener("click", this.handleClick);
-
-        this.render();
     }
 
     public destroy() {
+        this.destroyTbodyElement(this.element);
         this.model.removeRowListener(this.handleRowsChanged);
         this.model.removeColumnListener(this.handleColumnsChanged);
         this.model.removeSelectionListener(this.handleSelectionChanged);
         this.model.removeSortListener(this.handleSortChanged);
-        this.element.removeEventListener("click", this.handleClick);
     }
 
     private handleRowsChanged = () => {
-        this.render();
+        this.rerender();
     }
 
     private handleColumnsChanged = () => {
         this.trElements.clear();
-        this.render();
+        this.rerender();
     }
 
     private handleSelectionChanged = (newSelection: Set<KeyType>, oldSelection: Set<KeyType>) => {
@@ -62,7 +58,7 @@ export class TableBodyView<
     }
 
     private handleSortChanged = () => {
-        this.render();
+        this.rerender();
     }
 
     private handleClick = (event: MouseEvent) => {
@@ -72,26 +68,32 @@ export class TableBodyView<
         }
     }
 
-    private render() {
-        const removedRows = new Set(this.trElements.keys());
-        const rowElementList = [];
+    private rerender() {
+        const newElement = this.createTbodyElement();
+        this.destroyTbodyElement(this.element);
+        replaceWith(this.element, newElement);
+        this.element = newElement;
+    }
+
+    private createTbodyElement() {
+        const tbody = document.createElement("tbody");
+        const newTrElements = new Map<Row, HTMLTableRowElement>();
 
         for (const row of this.model.sortedRows) {
-            let rowElement = this.trElements.get(row);
-            if (!rowElement) {
-                rowElement = this.createTrElement(row);
-                this.trElements.set(row, rowElement);
-            }
-            this.decorateTrElement(row, rowElement);
-            rowElementList.push(rowElement);
-            removedRows.delete(row);
+            const oldTr = this.trElements.get(row);
+            const newTr = oldTr ? oldTr.cloneNode(true) as HTMLTableRowElement : this.createTrElement(row);
+            this.decorateTrElement(row, newTr);
+            tbody.appendChild(newTr);
+            newTrElements.set(row, newTr);
         }
 
-        removedRows.forEach((removedRow) => {
-            this.trElements.delete(removedRow);
-        });
+        this.trElements = newTrElements;
+        tbody.addEventListener("click", this.handleClick);
+        return tbody;
+    }
 
-        renderChildNodes(this.element, rowElementList);
+    private destroyTbodyElement(tbody: HTMLTableSectionElement) {
+        tbody.removeEventListener("click", this.handleClick);
     }
 
     private createTrElement(row: Row) {

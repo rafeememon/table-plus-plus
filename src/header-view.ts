@@ -1,4 +1,4 @@
-import { renderChildNodes } from "./dom";
+import { replaceWith } from "./dom";
 import { getClickedHeaderIndex } from "./events";
 import { HeaderClickHandler, IColumn, ISort, ITableModel, ITableSectionView, ObjectWithKey } from "./types";
 
@@ -11,32 +11,25 @@ export class TableHeaderView<
 > implements ITableSectionView {
 
     public element: HTMLTableSectionElement;
-    private trElement: HTMLTableRowElement;
     private thElements: Map<IColumn<Row>, HTMLTableHeaderCellElement> = new Map();
 
     public constructor(
         private model: ITableModel<Key, Row, KeyType>,
         private clickHandler: HeaderClickHandler,
     ) {
-        this.element = document.createElement("thead");
-        this.trElement = document.createElement("tr");
-        this.element.appendChild(this.trElement);
-
+        this.element = this.createTheadElement();
         this.model.addColumnListener(this.handleColumnsChanged);
         this.model.addSortListener(this.handleSortChanged);
-        this.element.addEventListener("click", this.handleClick);
-
-        this.render();
     }
 
     public destroy() {
+        this.destroyTheadElement(this.element);
         this.model.removeColumnListener(this.handleColumnsChanged);
         this.model.removeSortListener(this.handleSortChanged);
-        this.element.removeEventListener("click", this.handleClick);
     }
 
     private handleColumnsChanged = () => {
-        this.render();
+        this.rerender();
     }
 
     private handleSortChanged = (newSort: ISort<Row> | undefined, oldSort: ISort<Row> | undefined) => {
@@ -62,26 +55,34 @@ export class TableHeaderView<
         }
     }
 
-    private render() {
-        const removedColumns = new Set(this.thElements.keys());
-        const thElementList = [];
+    private rerender() {
+        const newElement = this.createTheadElement();
+        this.destroyTheadElement(this.element);
+        replaceWith(this.element, newElement);
+        this.element = newElement;
+    }
+
+    private createTheadElement() {
+        const thead = document.createElement("thead");
+        const tr = document.createElement("tr");
+        const newThElements = new Map<IColumn<Row>, HTMLTableHeaderCellElement>();
 
         for (const column of this.model.columns) {
-            let headerElement = this.thElements.get(column);
-            if (!headerElement) {
-                headerElement = this.createThElement(column);
-                this.thElements.set(column, headerElement);
-            }
-            this.decorateThElement(column, headerElement);
-            thElementList.push(headerElement);
-            removedColumns.delete(column);
+            const oldTh = this.thElements.get(column);
+            const newTh = oldTh ? oldTh.cloneNode(true) as HTMLTableHeaderCellElement : this.createThElement(column);
+            this.decorateThElement(column, newTh);
+            tr.appendChild(newTh);
+            newThElements.set(column, newTh);
         }
 
-        removedColumns.forEach((removedColumn) => {
-            this.thElements.delete(removedColumn);
-        });
+        this.thElements = newThElements;
+        thead.appendChild(tr);
+        thead.addEventListener("click", this.handleClick);
+        return thead;
+    }
 
-        renderChildNodes(this.trElement, thElementList);
+    private destroyTheadElement(thead: HTMLTableSectionElement) {
+        thead.removeEventListener("click", this.handleClick);
     }
 
     private createThElement(column: IColumn<Row>) {
