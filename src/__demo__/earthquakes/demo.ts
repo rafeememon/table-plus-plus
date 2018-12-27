@@ -2,7 +2,7 @@ import { MultiSelectionAdapter, SortAdapter, TableModel, TableView } from "../..
 import { COLUMNS } from "./columns";
 import { fetchEarthquakes } from "./data";
 
-import "./styles.css";
+import "../styles.css";
 
 const model = new TableModel({
     keyField: "code",

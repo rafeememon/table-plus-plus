@@ -6,7 +6,7 @@ import { MOUNTAIN_COLUMNS } from "./columns";
 import { FOURTEENERS, ULTRAS } from "./data";
 import { IMountain } from "./types";
 
-import "./styles.css";
+import "../styles.css";
 
 type Toggle = "FOURTEENERS" | "ULTRAS";
 

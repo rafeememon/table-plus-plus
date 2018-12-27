@@ -6,7 +6,7 @@ import { COLUMNS } from "./columns";
 import { fetchEarthquakes } from "./data";
 import { IGeoJsonFeatureProperties } from "./types";
 
-import "./styles.css";
+import "../styles.css";
 
 interface IState {
     rows: IGeoJsonFeatureProperties[];

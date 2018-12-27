@@ -1,13 +1,18 @@
 const webpack = require('webpack');
 
+const shims = [
+  'core-js/shim',
+  'whatwg-fetch',
+];
+
 module.exports = {
   mode: 'development',
 
   entry: {
-    earthquakes: './src/__demo__/earthquakes/demo.ts',
-    'earthquakes-react': './src/__demo__/earthquakes/demo-react.tsx',
-    mountains: './src/__demo__/mountains/demo.ts',
-    'mountains-react': './src/__demo__/mountains/demo-react.tsx',
+    earthquakes: [...shims, './src/__demo__/earthquakes/demo.ts'],
+    'earthquakes-react': [...shims, './src/__demo__/earthquakes/demo-react.tsx'],
+    mountains: [...shims, './src/__demo__/mountains/demo.ts'],
+    'mountains-react': [...shims, './src/__demo__/mountains/demo-react.tsx'],
   },
 
   resolve: {

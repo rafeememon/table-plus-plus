@@ -108,7 +108,7 @@ export class TableHeaderView<
                 th.appendChild(arrow);
             }
         } else if (oldArrow) {
-            oldArrow.remove();
+            th.removeChild(oldArrow);
         }
     }
 
