@@ -5,13 +5,16 @@ export const COLUMNS: Array<IColumn<IGeoJsonFeatureProperties>> = [
     {
         key: "time",
         label: "Time",
-        getData({time}) {
+        renderData({time}) {
             return new Date(time).toLocaleString();
         },
     },
     {
         key: "mag",
         label: "Magnitude",
+        renderData({mag}) {
+            return mag.toFixed(1);
+        },
     },
     {
         key: "place",
