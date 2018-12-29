@@ -38,3 +38,12 @@ export function createTableDiv(display: TableDisplay) {
     div.style.display = display;
     return div;
 }
+
+export function applyStyles(element: HTMLElement, styles: Partial<CSSStyleDeclaration>) {
+    for (const key in styles) { // tslint:disable-line:forin
+        const value = styles[key];
+        if (value != null) {
+            element.style[key] = value;
+        }
+    }
+}

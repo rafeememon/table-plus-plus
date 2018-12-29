@@ -1,5 +1,11 @@
 .tpp-table {
     user-select: none;
+    border-spacing: 0;
+    border-collapse: separate;
+}
+
+.tpp-body-row {
+    width: 100%;
 }
 
 .tpp-body-row[data-selected] {
@@ -12,4 +18,6 @@
 
 .tpp-header-cell, .tpp-body-cell {
     padding: 5px 5px 5px 0;
+    white-space: nowrap;
+    box-sizing: border-box;
 }

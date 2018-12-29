@@ -1,7 +1,7 @@
 import { ITableSectionView, ITableView, IViewConfig, ObjectWithKey } from "../types";
-import { TableBodyView } from "./body-view";
+import { TableBodyView } from "./body";
 import { createTableDiv } from "./dom";
-import { TableHeaderView } from "./header-view";
+import { TableHeaderView } from "./header";
 
 const TABLE_CLASSNAME = "tpp-table";
 
