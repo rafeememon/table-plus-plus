@@ -1,6 +1,6 @@
+import { ITableSectionView, ITableView, IViewConfig, ObjectWithKey } from "../types";
 import { TableBodyView } from "./body-view";
 import { TableHeaderView } from "./header-view";
-import { ITableSectionView, ITableView, IViewConfig, ObjectWithKey } from "./types";
 
 export class TableView<
     Key extends keyof Row,
