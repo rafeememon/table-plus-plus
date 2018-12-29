@@ -1,8 +1,16 @@
-import { replaceWith } from "./dom";
-import { getClickedHeaderIndex } from "./events";
-import { HeaderClickHandler, IColumn, ISort, ITableModel, ITableSectionView, ObjectWithKey } from "./types";
+import { HeaderClickHandler, IColumn, ISort, ITableModel, ITableSectionView, ObjectWithKey } from "../types";
+import { findParentElementOfType, getChildIndex, replaceWith } from "./dom";
 
-const SORT_ARROW_CLASSNAME = "sort-arrow";
+const SORT_ARROW_CLASSNAME = "tpp-sort-arrow";
+
+function getClickedHeaderIndex(event: MouseEvent) {
+    if (event.target instanceof Element) {
+        const th = findParentElementOfType(event.target, "TH");
+        return th && getChildIndex(th);
+    } else {
+        return null;
+    }
+}
 
 export class TableHeaderView<
     Key extends keyof Row,

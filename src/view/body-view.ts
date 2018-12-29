@@ -1,6 +1,5 @@
-import { replaceWith } from "./dom";
-import { getClickedRowIndex } from "./events";
-import { ITableModel, ITableSectionView, ObjectWithKey, RowClickHandler } from "./types";
+import { ITableModel, ITableSectionView, ObjectWithKey, RowClickHandler } from "../types";
+import { findParentElementOfType, getChildIndex, replaceWith } from "./dom";
 
 const SELECTED_ATTRIBUTE = "data-selected";
 
@@ -8,6 +7,15 @@ function union<T>(set1: Set<T>, set2: Set<T>) {
     const all = new Set(set1);
     set2.forEach((el) => all.add(el));
     return all;
+}
+
+function getClickedRowIndex(event: MouseEvent) {
+    if (event.target instanceof Element) {
+        const tr = findParentElementOfType(event.target, "TR");
+        return tr && getChildIndex(tr);
+    } else {
+        return null;
+    }
 }
 
 export class TableBodyView<
