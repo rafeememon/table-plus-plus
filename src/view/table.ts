@@ -1,6 +1,9 @@
 import { ITableSectionView, ITableView, IViewConfig, ObjectWithKey } from "../types";
 import { TableBodyView } from "./body-view";
+import { createTableDiv } from "./dom";
 import { TableHeaderView } from "./header-view";
+
+const TABLE_CLASSNAME = "tpp-table";
 
 export class TableView<
     Key extends keyof Row,
@@ -8,7 +11,7 @@ export class TableView<
     KeyType = Row[Key],
 > implements ITableView {
 
-    public element: HTMLTableElement;
+    public element: HTMLElement;
     private headerView: ITableSectionView;
     private bodyView: ITableSectionView;
 
@@ -16,7 +19,8 @@ export class TableView<
         this.headerView = new TableHeaderView(config.model, config.onClickHeader);
         this.bodyView = new TableBodyView(config.model, config.onClickRow);
 
-        this.element = document.createElement("table");
+        this.element = createTableDiv("table");
+        this.element.classList.add(TABLE_CLASSNAME);
         this.element.appendChild(this.headerView.element);
         this.element.appendChild(this.bodyView.element);
     }

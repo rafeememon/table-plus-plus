@@ -1,6 +1,8 @@
 import { ITableModel, ITableSectionView, ObjectWithKey, RowClickHandler } from "../types";
-import { findParentElementOfType, getChildIndex, replaceWith } from "./dom";
+import { createTableDiv, findParentElementWithClassName, getChildIndex, replaceWith } from "./dom";
 
+const BODY_ROW_CLASSNAME = "tpp-body-row";
+const BODY_CELL_CLASSNAME = "tpp-body-cell";
 const SELECTED_ATTRIBUTE = "data-selected";
 
 function union<T>(set1: Set<T>, set2: Set<T>) {
@@ -11,7 +13,7 @@ function union<T>(set1: Set<T>, set2: Set<T>) {
 
 function getClickedRowIndex(event: MouseEvent) {
     if (event.target instanceof Element) {
-        const tr = findParentElementOfType(event.target, "TR");
+        const tr = findParentElementWithClassName(event.target, BODY_ROW_CLASSNAME);
         return tr && getChildIndex(tr);
     } else {
         return null;
@@ -24,14 +26,14 @@ export class TableBodyView<
     KeyType = Row[Key],
 > implements ITableSectionView {
 
-    public element: HTMLTableSectionElement;
-    private trElements: Map<Row, HTMLTableRowElement> = new Map();
+    public element: HTMLElement;
+    private rowElements: Map<Row, HTMLElement> = new Map();
 
     public constructor(
         private model: ITableModel<Key, Row, KeyType>,
         private clickHandler: RowClickHandler,
     ) {
-        this.element = this.createTbodyElement();
+        this.element = this.createRowGroup();
         this.model.addRowListener(this.handleRowsChanged);
         this.model.addColumnListener(this.handleColumnsChanged);
         this.model.addSelectionListener(this.handleSelectionChanged);
@@ -39,7 +41,7 @@ export class TableBodyView<
     }
 
     public destroy() {
-        this.destroyTbodyElement(this.element);
+        this.destroyRowGroup(this.element);
         this.model.removeRowListener(this.handleRowsChanged);
         this.model.removeColumnListener(this.handleColumnsChanged);
         this.model.removeSelectionListener(this.handleSelectionChanged);
@@ -51,7 +53,7 @@ export class TableBodyView<
     }
 
     private handleColumnsChanged = () => {
-        this.trElements.clear();
+        this.rowElements.clear();
         this.rerender();
     }
 
@@ -60,7 +62,7 @@ export class TableBodyView<
         const keysToUpdate = union(newSelection, oldSelection);
         for (const row of sortedRows) {
             if (keysToUpdate.has(row[keyField])) {
-                this.decorateTrElement(row);
+                this.decorateRowElement(row);
             }
         }
     }
@@ -77,55 +79,57 @@ export class TableBodyView<
     }
 
     private rerender() {
-        const newElement = this.createTbodyElement();
-        this.destroyTbodyElement(this.element);
+        const newElement = this.createRowGroup();
+        this.destroyRowGroup(this.element);
         replaceWith(this.element, newElement);
         this.element = newElement;
     }
 
-    private createTbodyElement() {
-        const tbody = document.createElement("tbody");
-        const newTrElements = new Map<Row, HTMLTableRowElement>();
+    private createRowGroup() {
+        const group = createTableDiv("table-row-group");
+        const newRowElements = new Map<Row, HTMLElement>();
 
         for (const row of this.model.sortedRows) {
-            const oldTr = this.trElements.get(row);
-            const newTr = oldTr ? oldTr.cloneNode(true) as HTMLTableRowElement : this.createTrElement(row);
-            this.decorateTrElement(row, newTr);
-            tbody.appendChild(newTr);
-            newTrElements.set(row, newTr);
+            const oldRow = this.rowElements.get(row);
+            const newRow = oldRow ? oldRow.cloneNode(true) as HTMLElement : this.createRowElement(row);
+            this.decorateRowElement(row, newRow);
+            group.appendChild(newRow);
+            newRowElements.set(row, newRow);
         }
 
-        this.trElements = newTrElements;
-        tbody.addEventListener("click", this.handleClick);
-        return tbody;
+        this.rowElements = newRowElements;
+        group.addEventListener("click", this.handleClick);
+        return group;
     }
 
-    private destroyTbodyElement(tbody: HTMLTableSectionElement) {
-        tbody.removeEventListener("click", this.handleClick);
+    private destroyRowGroup(group: HTMLElement) {
+        group.removeEventListener("click", this.handleClick);
     }
 
-    private createTrElement(row: Row) {
-        const tr = document.createElement("tr");
+    private createRowElement(row: Row) {
+        const rowElement = createTableDiv("table-row");
+        rowElement.classList.add(BODY_ROW_CLASSNAME);
         for (const column of this.model.columns) {
-            const td = document.createElement("td");
+            const cellElement = createTableDiv("table-cell");
+            cellElement.classList.add(BODY_CELL_CLASSNAME);
             const content = column.renderData ? column.renderData(row) :
                 column.getData ? column.getData(row) : String(row[column.key]);
             const contentNode = typeof content === "string" ? document.createTextNode(content) : content;
-            td.appendChild(contentNode);
-            tr.appendChild(td);
+            cellElement.appendChild(contentNode);
+            rowElement.appendChild(cellElement);
         }
-        return tr;
+        return rowElement;
     }
 
-    private decorateTrElement(row: Row, tr = this.trElements.get(row)) {
-        if (!tr) {
+    private decorateRowElement(row: Row, rowElement = this.rowElements.get(row)) {
+        if (!rowElement) {
             return;
         }
 
         if (this.model.isSelected(row)) {
-            tr.setAttribute(SELECTED_ATTRIBUTE, "true");
+            rowElement.setAttribute(SELECTED_ATTRIBUTE, "true");
         } else {
-            tr.removeAttribute(SELECTED_ATTRIBUTE);
+            rowElement.removeAttribute(SELECTED_ATTRIBUTE);
         }
     }
 

@@ -1,15 +1,15 @@
-table {
-    border-spacing: 0;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
+.tpp-table {
     user-select: none;
 }
 
-tr[data-selected] {
+.tpp-body-row[data-selected] {
     background-color: lightblue;
 }
 
-th, td {
-    padding: 5px;
+.tpp-header-cell {
+    font-weight: bold;
+}
+
+.tpp-header-cell, .tpp-body-cell {
+    padding: 5px 5px 5px 0;
 }

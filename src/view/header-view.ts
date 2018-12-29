@@ -1,11 +1,12 @@
 import { HeaderClickHandler, IColumn, ISort, ITableModel, ITableSectionView, ObjectWithKey } from "../types";
-import { findParentElementOfType, getChildIndex, replaceWith } from "./dom";
+import { createTableDiv, findParentElementWithClassName, getChildIndex, replaceWith } from "./dom";
 
+const HEADER_CELL_CLASSNAME = "tpp-header-cell";
 const SORT_ARROW_CLASSNAME = "tpp-sort-arrow";
 
 function getClickedHeaderIndex(event: MouseEvent) {
     if (event.target instanceof Element) {
-        const th = findParentElementOfType(event.target, "TH");
+        const th = findParentElementWithClassName(event.target, HEADER_CELL_CLASSNAME);
         return th && getChildIndex(th);
     } else {
         return null;
@@ -18,20 +19,20 @@ export class TableHeaderView<
     KeyType = Row[Key],
 > implements ITableSectionView {
 
-    public element: HTMLTableSectionElement;
-    private thElements: Map<IColumn<Row>, HTMLTableHeaderCellElement> = new Map();
+    public element: HTMLElement;
+    private cellElements: Map<IColumn<Row>, HTMLElement> = new Map();
 
     public constructor(
         private model: ITableModel<Key, Row, KeyType>,
         private clickHandler: HeaderClickHandler,
     ) {
-        this.element = this.createTheadElement();
+        this.element = this.createHeaderGroup();
         this.model.addColumnListener(this.handleColumnsChanged);
         this.model.addSortListener(this.handleSortChanged);
     }
 
     public destroy() {
-        this.destroyTheadElement(this.element);
+        this.destroyHeaderGroup(this.element);
         this.model.removeColumnListener(this.handleColumnsChanged);
         this.model.removeSortListener(this.handleSortChanged);
     }
@@ -51,7 +52,7 @@ export class TableHeaderView<
         keys.forEach((key) => {
             const column = this.model.columns.find((c) => c.key === key);
             if (column) {
-                this.decorateThElement(column);
+                this.decorateCellElement(column);
             }
         });
     }
@@ -64,59 +65,60 @@ export class TableHeaderView<
     }
 
     private rerender() {
-        const newElement = this.createTheadElement();
-        this.destroyTheadElement(this.element);
+        const newElement = this.createHeaderGroup();
+        this.destroyHeaderGroup(this.element);
         replaceWith(this.element, newElement);
         this.element = newElement;
     }
 
-    private createTheadElement() {
-        const thead = document.createElement("thead");
-        const tr = document.createElement("tr");
-        const newThElements = new Map<IColumn<Row>, HTMLTableHeaderCellElement>();
+    private createHeaderGroup() {
+        const group = createTableDiv("table-header-group");
+        const row = createTableDiv("table-row");
+        const newCellElements = new Map<IColumn<Row>, HTMLElement>();
 
         for (const column of this.model.columns) {
-            const oldTh = this.thElements.get(column);
-            const newTh = oldTh ? oldTh.cloneNode(true) as HTMLTableHeaderCellElement : this.createThElement(column);
-            this.decorateThElement(column, newTh);
-            tr.appendChild(newTh);
-            newThElements.set(column, newTh);
+            const oldCell = this.cellElements.get(column);
+            const newCell = oldCell ? oldCell.cloneNode(true) as HTMLElement : this.createCellElement(column);
+            this.decorateCellElement(column, newCell);
+            row.appendChild(newCell);
+            newCellElements.set(column, newCell);
         }
 
-        this.thElements = newThElements;
-        thead.appendChild(tr);
-        thead.addEventListener("click", this.handleClick);
-        return thead;
+        this.cellElements = newCellElements;
+        group.appendChild(row);
+        group.addEventListener("click", this.handleClick);
+        return group;
     }
 
-    private destroyTheadElement(thead: HTMLTableSectionElement) {
-        thead.removeEventListener("click", this.handleClick);
+    private destroyHeaderGroup(group: HTMLElement) {
+        group.removeEventListener("click", this.handleClick);
     }
 
-    private createThElement(column: IColumn<Row>) {
-        const th = document.createElement("th");
-        th.appendChild(document.createTextNode(column.label));
-        return th;
+    private createCellElement(column: IColumn<Row>) {
+        const cell = createTableDiv("table-cell");
+        cell.classList.add(HEADER_CELL_CLASSNAME);
+        cell.appendChild(document.createTextNode(column.label));
+        return cell;
     }
 
-    private decorateThElement(column: IColumn<Row>, th = this.thElements.get(column)) {
-        if (!th) {
+    private decorateCellElement(column: IColumn<Row>, cellElement = this.cellElements.get(column)) {
+        if (!cellElement) {
             return;
         }
 
         const { sort } = this.model;
-        const oldArrow = th.getElementsByClassName(SORT_ARROW_CLASSNAME).item(0);
+        const oldArrow = cellElement.getElementsByClassName(SORT_ARROW_CLASSNAME).item(0);
         if (sort && sort.key === column.key) {
             const arrow = document.createElement("span");
             arrow.classList.add(SORT_ARROW_CLASSNAME);
             arrow.appendChild(document.createTextNode(sort.ascending ? " ↑" : " ↓"));
             if (oldArrow) {
-                th.replaceChild(arrow, oldArrow);
+                cellElement.replaceChild(arrow, oldArrow);
             } else {
-                th.appendChild(arrow);
+                cellElement.appendChild(arrow);
             }
         } else if (oldArrow) {
-            th.removeChild(oldArrow);
+            cellElement.removeChild(oldArrow);
         }
     }
 
