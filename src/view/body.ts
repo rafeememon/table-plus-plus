@@ -108,6 +108,7 @@ export class TableBodyView<
         const tr = document.createElement("tr");
         for (const column of this.model.columns) {
             const td = document.createElement("td");
+            td.style.boxSizing = "border-box";
             const content = column.renderData ? column.renderData(row) :
                 column.getData ? column.getData(row) : String(row[column.key]);
             const contentNode = typeof content === "string" ? document.createTextNode(content) : content;

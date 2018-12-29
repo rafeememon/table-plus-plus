@@ -95,6 +95,7 @@ export class TableHeaderView<
 
     private createThElement(column: IColumn<Row>) {
         const th = document.createElement("th");
+        th.style.boxSizing = "border-box";
         th.appendChild(document.createTextNode(column.label));
         return th;
     }
