@@ -46,3 +46,4 @@ subheader.appendChild(createToggle("Ultras", ULTRAS));
 document.body.appendChild(subheader);
 
 document.body.appendChild(view.element);
+view.initialize();

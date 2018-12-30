@@ -73,6 +73,11 @@ export class FixedTableView<
         this.updateScroll();
     }
 
+    public initialize() {
+        this.updateWidths();
+        this.updateScroll();
+    }
+
     public destroy() {
         this.headerView.destroy();
         this.bodyView.destroy();

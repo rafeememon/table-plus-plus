@@ -41,6 +41,7 @@ content.appendChild(view.element);
 container.appendChild(content);
 
 document.body.appendChild(container);
+view.initialize();
 
 fetchEarthquakes().then((response) => {
     const features = response.features.map((f) => f.properties);

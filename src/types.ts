@@ -71,6 +71,7 @@ export interface IViewConfig<
 
 export interface ITableView {
     readonly element: HTMLElement;
+    initialize(): void;
     destroy(): void;
 }
 
