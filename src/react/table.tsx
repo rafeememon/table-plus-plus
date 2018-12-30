@@ -132,6 +132,8 @@ export class Table<
         const { onSort } = this.props;
         if (onSort) {
             onSort(newSort);
+        } else if (!("sort" in this.props)) {
+            this.model.setSort(newSort);
         }
     }
 
