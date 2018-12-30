@@ -76,6 +76,7 @@ export class FixedTableView<
     public initialize() {
         this.updateWidths();
         this.updateScroll();
+        this.scrollSelectedIntoView();
     }
 
     public destroy() {
@@ -115,6 +116,13 @@ export class FixedTableView<
 
     private updateScroll = () => {
         this.headerElement.scrollLeft = this.bodyElement.scrollLeft;
+    }
+
+    private scrollSelectedIntoView() {
+        const element = this.bodyView.element.querySelector("tr[data-selected]");
+        if (element) {
+            element.scrollIntoView({ block: "center" });
+        }
     }
 
 }
