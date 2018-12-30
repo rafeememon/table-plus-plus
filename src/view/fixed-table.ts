@@ -97,13 +97,24 @@ export class FixedTableView<
         const bodyCells = this.bodyView.element.querySelectorAll("tr:first-child td") as
             NodeListOf<HTMLTableCellElement>;
         const numCells = Math.min(headerCells.length, bodyCells.length);
+        const widths = [];
+        let widthSum = 0;
 
         for (let index = 0; index < numCells; index++) {
-            const headerCell = headerCells[index];
-            const bodyCell = bodyCells[index];
-            const width = `${Math.max(headerCell.clientWidth, bodyCell.clientWidth)}px`;
-            headerCell.style.minWidth = width;
-            bodyCell.style.minWidth = width;
+            const headerCellWidth = headerCells[index].getBoundingClientRect().width;
+            const bodyCellWidth = bodyCells[index].getBoundingClientRect().width;
+            const width = Math.max(headerCellWidth, bodyCellWidth);
+            widths.push(width);
+            widthSum += width;
+        }
+
+        const bodyElementWidth = this.bodyElement.clientWidth;
+        const scale = widthSum < bodyElementWidth ? bodyElementWidth / widthSum : 1;
+
+        for (let index = 0; index < numCells; index++) {
+            const width = `${widths[index] * scale}px`;
+            headerCells[index].style.minWidth = width;
+            bodyCells[index].style.minWidth = width;
         }
 
         this.headerTable.style.paddingRight = `${this.getScrollbarWidth()}px`;
