@@ -10,6 +10,7 @@ module.exports = {
 
   entry: {
     earthquakes: [...shims, './src/__demo__/earthquakes/demo.ts'],
+    'earthquakes-fixed': [...shims, './src/__demo__/earthquakes/demo-fixed.ts'],
     'earthquakes-react': [...shims, './src/__demo__/earthquakes/demo-react.tsx'],
     mountains: [...shims, './src/__demo__/mountains/demo.ts'],
     'mountains-react': [...shims, './src/__demo__/mountains/demo-react.tsx'],

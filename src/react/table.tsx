@@ -1,5 +1,6 @@
 import * as React from "react";
 import {
+    FixedTableView,
     IColumn,
     ISort,
     ITableModel,
@@ -14,6 +15,7 @@ import {
     TableModel,
     TableView,
 } from "..";
+import { IViewConfig } from "../types";
 
 function createSelectionAdapter<
     Key extends keyof Row,
@@ -45,6 +47,7 @@ export interface ITableProps<
     selection?: Set<KeyType>;
     selectionMode?: SelectionMode;
     sort?: ISort<Row>;
+    fixed?: boolean;
     onSelect?(newSelection: Set<KeyType>): void;
     onSort?(newSort: ISort<Row>): void;
 }
@@ -61,19 +64,20 @@ export class Table<
     public constructor(props: ITableProps<Key, Row, KeyType>, context?: any) {
         super(props, context);
         this.model = new TableModel({
-            keyField: this.props.keyField,
-            rows: this.props.rows,
-            columns: this.props.columns,
-            selection: this.props.selection,
-            sort: this.props.sort,
+            keyField: props.keyField,
+            rows: props.rows,
+            columns: props.columns,
+            selection: props.selection,
+            sort: props.sort,
         });
-        const selectionAdapter = createSelectionAdapter(this.props.selectionMode, this.model, this.handleSelect);
+        const selectionAdapter = createSelectionAdapter(props.selectionMode, this.model, this.handleSelect);
         const sortAdapter = new SortAdapter(this.model, this.handleSort);
-        this.view = new TableView({
+        const config: IViewConfig<Key, Row, KeyType> = {
             model: this.model,
             onClickRow: selectionAdapter.handleRowClick,
             onClickHeader: sortAdapter.handleHeaderClick,
-        });
+        };
+        this.view = props.fixed ? new FixedTableView(config) : new TableView(config);
     }
 
     public componentWillUnmount() {
@@ -82,7 +86,7 @@ export class Table<
     }
 
     public componentDidUpdate(oldProps: ITableProps<Key, Row, KeyType>) {
-        const { keyField, rows, columns, selection, selectionMode, sort } = this.props;
+        const { keyField, rows, columns, selection, selectionMode, sort, fixed } = this.props;
         if (keyField !== oldProps.keyField) {
             throw new Error("changing key field not supported");
         }
@@ -100,6 +104,9 @@ export class Table<
         }
         if (sort !== oldProps.sort) {
             this.model.setSort(sort);
+        }
+        if (fixed !== oldProps.fixed) {
+            throw new Error("changing fixed mode not supported");
         }
     }
 
