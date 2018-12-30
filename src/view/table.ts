@@ -21,6 +21,10 @@ export class TableView<
         this.element.appendChild(this.bodyView.element);
     }
 
+    public initialize() {
+        // no-op
+    }
+
     public destroy() {
         this.headerView.destroy();
         this.bodyView.destroy();
