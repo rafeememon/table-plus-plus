@@ -7,6 +7,7 @@ export interface ITableProps<Key extends keyof Row, Row extends ObjectWithKey<Ke
     selection?: Set<KeyType>;
     selectionMode?: SelectionMode;
     sort?: ISort<Row>;
+    fixed?: boolean;
     onSelect?(newSelection: Set<KeyType>): void;
     onSort?(newSort: ISort<Row>): void;
 }

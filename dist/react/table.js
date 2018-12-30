@@ -32,6 +32,7 @@ var Table = /** @class */ (function (_super) {
         _this.handleRef = function (element) {
             if (element) {
                 element.appendChild(_this.view.element);
+                _this.view.initialize();
             }
         };
         _this.handleSelect = function (newSelection) {
@@ -45,21 +46,25 @@ var Table = /** @class */ (function (_super) {
             if (onSort) {
                 onSort(newSort);
             }
+            else if (!("sort" in _this.props)) {
+                _this.model.setSort(newSort);
+            }
         };
         _this.model = new __1.TableModel({
-            keyField: _this.props.keyField,
-            rows: _this.props.rows,
-            columns: _this.props.columns,
-            selection: _this.props.selection,
-            sort: _this.props.sort,
+            keyField: props.keyField,
+            rows: props.rows,
+            columns: props.columns,
+            selection: props.selection,
+            sort: props.sort,
         });
-        var selectionAdapter = createSelectionAdapter(_this.props.selectionMode, _this.model, _this.handleSelect);
+        var selectionAdapter = createSelectionAdapter(props.selectionMode, _this.model, _this.handleSelect);
         var sortAdapter = new __1.SortAdapter(_this.model, _this.handleSort);
-        _this.view = new __1.TableView({
+        var config = {
             model: _this.model,
             onClickRow: selectionAdapter.handleRowClick,
             onClickHeader: sortAdapter.handleHeaderClick,
-        });
+        };
+        _this.view = props.fixed ? new __1.FixedTableView(config) : new __1.TableView(config);
         return _this;
     }
     Table.prototype.componentWillUnmount = function () {
@@ -67,7 +72,7 @@ var Table = /** @class */ (function (_super) {
         this.view.destroy();
     };
     Table.prototype.componentDidUpdate = function (oldProps) {
-        var _a = this.props, keyField = _a.keyField, rows = _a.rows, columns = _a.columns, selection = _a.selection, selectionMode = _a.selectionMode, sort = _a.sort;
+        var _a = this.props, keyField = _a.keyField, rows = _a.rows, columns = _a.columns, selection = _a.selection, selectionMode = _a.selectionMode, sort = _a.sort, fixed = _a.fixed;
         if (keyField !== oldProps.keyField) {
             throw new Error("changing key field not supported");
         }
@@ -85,6 +90,9 @@ var Table = /** @class */ (function (_super) {
         }
         if (sort !== oldProps.sort) {
             this.model.setSort(sort);
+        }
+        if (fixed !== oldProps.fixed) {
+            throw new Error("changing fixed mode not supported");
         }
     };
     Table.prototype.render = function () {

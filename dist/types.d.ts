@@ -53,6 +53,11 @@ export interface IViewConfig<Key extends keyof Row, Row extends ObjectWithKey<Ke
 }
 export interface ITableView {
     readonly element: HTMLElement;
+    initialize(): void;
+    destroy(): void;
+}
+export interface ITableSectionView {
+    readonly element: HTMLElement;
     destroy(): void;
 }
 export declare type SelectionMode = "none" | "single" | "multi";
