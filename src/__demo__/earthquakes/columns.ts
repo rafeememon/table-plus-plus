@@ -22,10 +22,10 @@ export const COLUMNS: Array<IColumn<IGeoJsonFeatureProperties>> = [
     },
     {
         key: "url",
-        label: "Info",
+        label: "Details",
         renderData({url}) {
             const link = document.createElement("a");
-            link.appendChild(document.createTextNode("View"));
+            link.appendChild(document.createTextNode("Details"));
             link.href = url;
             link.target = "_blank";
             return link;

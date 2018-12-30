@@ -11,7 +11,7 @@ table {
 }
 
 tr[data-selected] {
-    background-color: #dcedfc;
+    background-color: #dcedfc !important;
 }
 
 th, td {

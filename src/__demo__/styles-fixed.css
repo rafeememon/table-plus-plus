@@ -35,3 +35,11 @@ th {
     font-weight: normal;
     text-align: left;
 }
+
+.tpp-fixed-table-body tr {
+    box-shadow: inset 0 1px 0 #ddd;
+}
+
+.tpp-fixed-table-body tr:hover {
+    background-color: #f6f6f6;
+}
