@@ -1,4 +1,4 @@
-import { ITableModel, ITableSectionView, ObjectWithKey, RowClickHandler } from "../types";
+import { IColumn, ITableModel, ITableSectionView, ObjectWithKey, RowClickHandler } from "../types";
 import { findParentElementOfType, getChildIndex, replaceWith } from "./dom";
 
 const SELECTED_ATTRIBUTE = "data-selected";
@@ -16,6 +16,21 @@ function getClickedRowIndex(event: MouseEvent) {
     } else {
         return null;
     }
+}
+
+export function renderCellContent<Row>(row: Row, column: IColumn<Row>): Node {
+    let content: string | Node;
+
+    if (column.renderData) {
+        content = column.renderData(row);
+    } else if (column.getData) {
+        content = column.getData(row);
+    } else {
+        const value = row[column.key];
+        content = value != null ? String(value) : "";
+    }
+
+    return typeof content === "string" ? document.createTextNode(content) : content;
 }
 
 export class TableBodyView<
@@ -109,10 +124,7 @@ export class TableBodyView<
         for (const column of this.model.columns) {
             const td = document.createElement("td");
             td.style.boxSizing = "border-box";
-            const content = column.renderData ? column.renderData(row) :
-                column.getData ? column.getData(row) : String(row[column.key]);
-            const contentNode = typeof content === "string" ? document.createTextNode(content) : content;
-            td.appendChild(contentNode);
+            td.appendChild(renderCellContent(row, column));
             tr.appendChild(td);
         }
         return tr;
