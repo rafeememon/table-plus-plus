@@ -1,4 +1,4 @@
-import { expandWidths, sum } from "../../view/math";
+import { expandWidths, sum, union } from "../../view/math";
 
 describe("sum", () => {
 
@@ -31,6 +31,17 @@ describe("expandWidths", () => {
         for (let index = 0; index < widths.length; index++) {
             expect(result[index]).toBeGreaterThanOrEqual(widths[index]);
         }
+    });
+
+});
+
+describe("union", () => {
+
+    test("unions the sets", () => {
+        const set1 = new Set([1, 2]);
+        const set2 = new Set([2, 3]);
+        const expected = new Set([1, 2, 3]);
+        expect(union(set1, set2)).toEqual(expected);
     });
 
 });

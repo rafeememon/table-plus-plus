@@ -28,3 +28,9 @@ export function sum(nums: number[]) {
     }
     return result;
 }
+
+export function union<T>(set1: Set<T>, set2: Set<T>) {
+    const all = new Set(set1);
+    set2.forEach((el) => all.add(el));
+    return all;
+}
