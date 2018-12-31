@@ -112,7 +112,7 @@ export class FixedTableView<
         const scale = widthSum < bodyElementWidth ? bodyElementWidth / widthSum : 1;
 
         for (let index = 0; index < numCells; index++) {
-            const width = `${widths[index] * scale}px`;
+            const width = `${Math.round(widths[index] * scale)}px`;
             headerCells[index].style.minWidth = width;
             bodyCells[index].style.minWidth = width;
         }
