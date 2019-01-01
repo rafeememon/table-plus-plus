@@ -2,6 +2,7 @@ import { ITableSectionView, ITableView, IViewConfig, ObjectWithKey } from "../ty
 import { TableBodyView } from "./body";
 import { applyStyles } from "./dom";
 import { TableHeaderView } from "./header";
+import { expandWidths } from "./math";
 
 const HEADER_ELEMENT_CLASSNAME = "tpp-fixed-table-header";
 const BODY_ELEMENT_CLASSNAME = "tpp-fixed-table-body";
@@ -98,21 +99,17 @@ export class FixedTableView<
             NodeListOf<HTMLTableCellElement>;
         const numCells = Math.min(headerCells.length, bodyCells.length);
         const widths = [];
-        let widthSum = 0;
 
         for (let index = 0; index < numCells; index++) {
             const headerCellWidth = headerCells[index].getBoundingClientRect().width;
             const bodyCellWidth = bodyCells[index].getBoundingClientRect().width;
-            const width = Math.max(headerCellWidth, bodyCellWidth);
-            widths.push(width);
-            widthSum += width;
+            widths.push(Math.max(headerCellWidth, bodyCellWidth));
         }
 
-        const bodyElementWidth = this.bodyElement.clientWidth;
-        const scale = widthSum < bodyElementWidth ? bodyElementWidth / widthSum : 1;
+        const expandedWidths = expandWidths(widths, this.bodyElement.clientWidth);
 
         for (let index = 0; index < numCells; index++) {
-            const width = `${Math.round(widths[index] * scale)}px`;
+            const width = `${expandedWidths[index]}px`;
             headerCells[index].style.minWidth = width;
             bodyCells[index].style.minWidth = width;
         }

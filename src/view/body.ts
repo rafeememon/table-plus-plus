@@ -1,13 +1,8 @@
 import { IColumn, ITableModel, ITableSectionView, ObjectWithKey, RowClickHandler } from "../types";
 import { findParentElementOfType, getChildIndex, replaceWith } from "./dom";
+import { union } from "./math";
 
 const SELECTED_ATTRIBUTE = "data-selected";
-
-function union<T>(set1: Set<T>, set2: Set<T>) {
-    const all = new Set(set1);
-    set2.forEach((el) => all.add(el));
-    return all;
-}
 
 function getClickedRowIndex(event: MouseEvent) {
     if (event.target instanceof Element) {
