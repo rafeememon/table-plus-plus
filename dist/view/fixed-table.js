@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var body_1 = require("./body");
 var dom_1 = require("./dom");
 var header_1 = require("./header");
+var math_1 = require("./math");
 var HEADER_ELEMENT_CLASSNAME = "tpp-fixed-table-header";
 var BODY_ELEMENT_CLASSNAME = "tpp-fixed-table-body";
 var ELEMENT_STYLES = {
@@ -73,12 +74,17 @@ var FixedTableView = /** @class */ (function () {
         var headerCells = this.headerView.element.querySelectorAll("tr:first-child th");
         var bodyCells = this.bodyView.element.querySelectorAll("tr:first-child td");
         var numCells = Math.min(headerCells.length, bodyCells.length);
+        var widths = [];
         for (var index = 0; index < numCells; index++) {
-            var headerCell = headerCells[index];
-            var bodyCell = bodyCells[index];
-            var width = Math.max(headerCell.clientWidth, bodyCell.clientWidth) + "px";
-            headerCell.style.minWidth = width;
-            bodyCell.style.minWidth = width;
+            var headerCellWidth = headerCells[index].getBoundingClientRect().width;
+            var bodyCellWidth = bodyCells[index].getBoundingClientRect().width;
+            widths.push(Math.max(headerCellWidth, bodyCellWidth));
+        }
+        var expandedWidths = math_1.expandWidths(widths, this.bodyElement.clientWidth);
+        for (var index = 0; index < numCells; index++) {
+            var width = expandedWidths[index] + "px";
+            headerCells[index].style.minWidth = width;
+            bodyCells[index].style.minWidth = width;
         }
         this.headerTable.style.paddingRight = this.getScrollbarWidth() + "px";
     };

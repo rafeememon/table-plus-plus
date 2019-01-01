@@ -1,12 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var dom_1 = require("./dom");
+var math_1 = require("./math");
 var SELECTED_ATTRIBUTE = "data-selected";
-function union(set1, set2) {
-    var all = new Set(set1);
-    set2.forEach(function (el) { return all.add(el); });
-    return all;
-}
 function getClickedRowIndex(event) {
     if (event.target instanceof Element) {
         var tr = dom_1.findParentElementOfType(event.target, "TR");
@@ -46,7 +42,7 @@ var TableBodyView = /** @class */ (function () {
         };
         this.handleSelectionChanged = function (newSelection, oldSelection) {
             var _a = _this.model, keyField = _a.keyField, sortedRows = _a.sortedRows;
-            var keysToUpdate = union(newSelection, oldSelection);
+            var keysToUpdate = math_1.union(newSelection, oldSelection);
             for (var _i = 0, sortedRows_1 = sortedRows; _i < sortedRows_1.length; _i++) {
                 var row = sortedRows_1[_i];
                 if (keysToUpdate.has(row[keyField])) {
