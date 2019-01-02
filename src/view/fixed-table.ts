@@ -129,7 +129,10 @@ export class FixedTableView<
     private scrollSelectedIntoView() {
         const element = this.bodyView.element.querySelector("tr[data-selected]");
         if (element) {
-            element.scrollIntoView({ block: "center" });
+            element.scrollIntoView({
+                block: "center",
+                inline: "start",
+            });
         }
     }
 
