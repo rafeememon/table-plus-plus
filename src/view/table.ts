@@ -9,8 +9,8 @@ export class TableView<
 > implements ITableView {
 
     public element: HTMLTableElement;
-    private headerView: ITableSectionView;
-    private bodyView: ITableSectionView;
+    public headerView: ITableSectionView;
+    public bodyView: ITableSectionView;
 
     public constructor(config: IViewConfig<Key, Row, KeyType>) {
         this.headerView = new TableHeaderView(config.model, config.onClickHeader);
