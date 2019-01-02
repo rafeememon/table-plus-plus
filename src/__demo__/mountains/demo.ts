@@ -29,7 +29,10 @@ const view = new TableView({
 function createToggle(text: string, mountains: IMountain[]) {
     const link = document.createElement("a");
     link.href = "#";
-    link.addEventListener("click", () => model.setRows(mountains));
+    link.addEventListener("click", (event) => {
+        event.preventDefault();
+        model.setRows(mountains);
+    });
     link.appendChild(document.createTextNode(text));
     return link;
 }
