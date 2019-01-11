@@ -24,7 +24,11 @@
   "files": [
     "dist"
   ],
+  "dependencies": {
+    "element-resize-detector": "^1.2.0"
+  },
   "devDependencies": {
+    "@types/element-resize-detector": "^1.1.2",
     "@types/jest": "^23.3.10",
     "@types/react": "^16.7.1",
     "@types/react-dom": "^16.0.11",
