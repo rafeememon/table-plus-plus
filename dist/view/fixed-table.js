@@ -1,9 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var erdMaker = require("element-resize-detector");
 var body_1 = require("./body");
 var dom_1 = require("./dom");
 var header_1 = require("./header");
 var math_1 = require("./math");
+var erd = erdMaker({ callOnAdd: false });
 var HEADER_ELEMENT_CLASSNAME = "tpp-fixed-table-header";
 var BODY_ELEMENT_CLASSNAME = "tpp-fixed-table-body";
 var ELEMENT_STYLES = {
@@ -32,6 +34,9 @@ var FixedTableView = /** @class */ (function () {
             _this.updateWidths();
             _this.updateScroll();
         };
+        this.handleResize = function () {
+            _this.updateWidths();
+        };
         this.updateScroll = function () {
             _this.headerElement.scrollLeft = _this.bodyElement.scrollLeft;
         };
@@ -56,6 +61,7 @@ var FixedTableView = /** @class */ (function () {
         this.domObserver = new MutationObserver(this.handleMutation);
         this.domObserver.observe(this.element, { childList: true, subtree: true });
         this.bodyElement.addEventListener("scroll", this.updateScroll);
+        erd.listenTo(this.element, this.handleResize);
         this.updateWidths();
         this.updateScroll();
     }
@@ -69,6 +75,7 @@ var FixedTableView = /** @class */ (function () {
         this.bodyView.destroy();
         this.domObserver.disconnect();
         this.bodyElement.removeEventListener("scroll", this.updateScroll);
+        erd.uninstall(this.element);
     };
     FixedTableView.prototype.updateWidths = function () {
         var headerCells = this.headerView.element.querySelectorAll("tr:first-child th");
@@ -76,6 +83,8 @@ var FixedTableView = /** @class */ (function () {
         var numCells = Math.min(headerCells.length, bodyCells.length);
         var widths = [];
         for (var index = 0; index < numCells; index++) {
+            headerCells[index].style.minWidth = null;
+            bodyCells[index].style.minWidth = null;
             var headerCellWidth = headerCells[index].getBoundingClientRect().width;
             var bodyCellWidth = bodyCells[index].getBoundingClientRect().width;
             widths.push(Math.max(headerCellWidth, bodyCellWidth));
@@ -95,7 +104,10 @@ var FixedTableView = /** @class */ (function () {
     FixedTableView.prototype.scrollSelectedIntoView = function () {
         var element = this.bodyView.element.querySelector("tr[data-selected]");
         if (element) {
-            element.scrollIntoView({ block: "center" });
+            element.scrollIntoView({
+                block: "center",
+                inline: "start",
+            });
         }
     };
     return FixedTableView;

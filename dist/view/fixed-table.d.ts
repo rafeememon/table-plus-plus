@@ -11,6 +11,7 @@ export declare class FixedTableView<Key extends keyof Row, Row extends ObjectWit
     initialize(): void;
     destroy(): void;
     private handleMutation;
+    private handleResize;
     private updateWidths;
     private getScrollbarWidth;
     private updateScroll;
