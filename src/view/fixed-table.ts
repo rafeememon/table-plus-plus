@@ -1,8 +1,11 @@
+import * as erdMaker from "element-resize-detector";
 import { ITableSectionView, ITableView, IViewConfig, ObjectWithKey } from "../types";
 import { TableBodyView } from "./body";
 import { applyStyles } from "./dom";
 import { TableHeaderView } from "./header";
 import { expandWidths } from "./math";
+
+const erd = erdMaker({ callOnAdd: false });
 
 const HEADER_ELEMENT_CLASSNAME = "tpp-fixed-table-header";
 const BODY_ELEMENT_CLASSNAME = "tpp-fixed-table-body";
@@ -67,8 +70,8 @@ export class FixedTableView<
 
         this.domObserver = new MutationObserver(this.handleMutation);
         this.domObserver.observe(this.element, { childList: true, subtree: true });
-
         this.bodyElement.addEventListener("scroll", this.updateScroll);
+        erd.listenTo(this.element, this.handleResize);
 
         this.updateWidths();
         this.updateScroll();
@@ -85,11 +88,16 @@ export class FixedTableView<
         this.bodyView.destroy();
         this.domObserver.disconnect();
         this.bodyElement.removeEventListener("scroll", this.updateScroll);
+        erd.uninstall(this.element);
     }
 
     private handleMutation = () => {
         this.updateWidths();
         this.updateScroll();
+    }
+
+    private handleResize = () => {
+        this.updateWidths();
     }
 
     private updateWidths() {
@@ -101,6 +109,8 @@ export class FixedTableView<
         const widths = [];
 
         for (let index = 0; index < numCells; index++) {
+            headerCells[index].style.minWidth = null;
+            bodyCells[index].style.minWidth = null;
             const headerCellWidth = headerCells[index].getBoundingClientRect().width;
             const bodyCellWidth = bodyCells[index].getBoundingClientRect().width;
             widths.push(Math.max(headerCellWidth, bodyCellWidth));
