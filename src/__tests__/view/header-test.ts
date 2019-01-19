@@ -1,5 +1,5 @@
 import { ITableModel, ITableSectionView, TableModel } from "../..";
-import { TableHeaderView } from "../../view/header";
+import { SORT_ARROW_CLASSNAME, TableHeaderView } from "../../view/header";
 import { ITestRow, TEST_COLUMNS, TEST_COLUMNS_2, TEST_ROWS } from "./test-data";
 
 export function getHeaderTh(view: ITableSectionView, index: number) {
@@ -66,11 +66,19 @@ describe("TableHeaderView", () => {
 
         for (let index = 0; index < columns.length; index++) {
             const column = columns[index];
-            let expectedHeader = column.label;
+            const { childNodes } = getHeaderTh(view, index);
+            expect(childNodes.length).toEqual(2);
+
+            expect(childNodes[0]).toEqual(document.createTextNode(column.label));
+
+            const arrow = childNodes[1] as HTMLElement;
+            expect(arrow.classList.contains(SORT_ARROW_CLASSNAME)).toBe(true);
             if (sort && sort.key === column.key) {
-                expectedHeader += sort.ascending ? " ↑" : " ↓";
+                expect(arrow.textContent).toEqual(sort.ascending ? " ↑" : " ↓");
+            } else {
+                expect(arrow.textContent === " ↑" || arrow.textContent === " ↓").toBe(true);
+                expect(arrow.style.visibility).toEqual("hidden");
             }
-            expect(getHeaderTh(view, index).textContent).toEqual(expectedHeader);
         }
     }
 
