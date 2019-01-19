@@ -1,7 +1,7 @@
 import { HeaderClickHandler, IColumn, ISort, ITableModel, ITableSectionView, ObjectWithKey } from "../types";
 import { findParentElementOfType, getChildIndex, replaceWith } from "./dom";
 
-const SORT_ARROW_CLASSNAME = "tpp-sort-arrow";
+export const SORT_ARROW_CLASSNAME = "tpp-sort-arrow";
 
 function getClickedHeaderIndex(event: MouseEvent) {
     if (event.target instanceof Element) {
@@ -107,17 +107,21 @@ export class TableHeaderView<
 
         const { sort } = this.model;
         const oldArrow = th.getElementsByClassName(SORT_ARROW_CLASSNAME).item(0);
-        if (sort && sort.key === column.key) {
-            const arrow = document.createElement("span");
-            arrow.classList.add(SORT_ARROW_CLASSNAME);
-            arrow.appendChild(document.createTextNode(sort.ascending ? " ↑" : " ↓"));
-            if (oldArrow) {
-                th.replaceChild(arrow, oldArrow);
-            } else {
-                th.appendChild(arrow);
-            }
-        } else if (oldArrow) {
-            th.removeChild(oldArrow);
+
+        const ascending = sort != null && sort.key === column.key && sort.ascending;
+        const visible = sort != null && sort.key === column.key;
+
+        const arrow = document.createElement("span");
+        arrow.classList.add(SORT_ARROW_CLASSNAME);
+        arrow.appendChild(document.createTextNode(ascending ? " ↑" : " ↓"));
+        if (!visible) {
+            arrow.style.visibility = "hidden";
+        }
+
+        if (oldArrow) {
+            th.replaceChild(arrow, oldArrow);
+        } else {
+            th.appendChild(arrow);
         }
     }
 
