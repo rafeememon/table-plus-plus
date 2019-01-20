@@ -79,7 +79,6 @@ export class Table<
             onClickHeader: sortAdapter.handleHeaderClick,
         };
         this.view = props.fixed ? new FixedTableView(config) : new TableView(config);
-        this.view.element.className = props.className || "";
     }
 
     public componentWillUnmount() {
@@ -88,7 +87,7 @@ export class Table<
     }
 
     public componentDidUpdate(oldProps: ITableProps<Key, Row, KeyType>) {
-        const { keyField, rows, columns, selection, selectionMode, sort, fixed, className } = this.props;
+        const { keyField, rows, columns, selection, selectionMode, sort, fixed } = this.props;
         if (keyField !== oldProps.keyField) {
             throw new Error("changing key field not supported");
         }
@@ -110,13 +109,10 @@ export class Table<
         if (fixed !== oldProps.fixed) {
             throw new Error("changing fixed mode not supported");
         }
-        if (className !== oldProps.className) {
-            this.view.element.className = className || "";
-        }
     }
 
     public render() {
-        return <div ref={this.handleRef} />;
+        return <div ref={this.handleRef} className={this.props.className} />;
     }
 
     private handleRef = (element: HTMLElement | null) => {
