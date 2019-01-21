@@ -1,4 +1,4 @@
-import { findParentElementOfType, getChildIndex, removeAllChildren, replaceWith } from "../../view/dom";
+import { applyStyles, findParentElementOfType, getChildIndex, removeAllChildren, replaceWith } from "../../view/dom";
 
 function createDiv() {
     return document.createElement("div");
@@ -91,6 +91,22 @@ describe("removeAllChildren", () => {
         const parent = createDiv();
         removeAllChildren(parent);
         expect(parent.childNodes.length).toBe(0);
+    });
+
+});
+
+describe("applyStyles", () => {
+
+    test("applys styles", () => {
+        const styles: Partial<CSSStyleDeclaration> = {
+            backgroundColor: "blue",
+            color: "red",
+        };
+        const div = createDiv();
+        applyStyles(div, styles);
+        for (const key in styles) { // tslint:disable-line:forin
+            expect(div.style[key]).toEqual(styles[key]);
+        }
     });
 
 });
