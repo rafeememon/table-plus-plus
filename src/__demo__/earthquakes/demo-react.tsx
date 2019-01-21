@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Table } from "../../react";
 import { ISort } from "../../types";
-import { COLUMNS } from "./columns";
+import { COLUMNS_REACT } from "./columns-react";
 import { fetchEarthquakes } from "./data";
 import { IGeoJsonFeatureProperties } from "./types";
 
@@ -36,7 +36,7 @@ class Demo extends React.PureComponent<{}, IState> {
                 <Table
                     keyField="code"
                     rows={this.state.rows}
-                    columns={COLUMNS}
+                    columns={COLUMNS_REACT}
                     selection={this.state.selection}
                     selectionMode="multi"
                     sort={this.state.sort}

@@ -1,4 +1,4 @@
-import { findParentElementOfType, getChildIndex, replaceWith } from "../../view/dom";
+import { findParentElementOfType, getChildIndex, removeAllChildren, replaceWith } from "../../view/dom";
 
 function createDiv() {
     return document.createElement("div");
@@ -71,6 +71,26 @@ describe("getChildIndex", () => {
         expect(getChildIndex(child1)).toBe(0);
         expect(getChildIndex(child2)).toBe(1);
         expect(getChildIndex(child3)).toBe(2);
+    });
+
+});
+
+describe("removeAllChildren", () => {
+
+    test("removes all child nodes", () => {
+        const parent = createDiv();
+        const child1 = createDiv();
+        const child2 = createDiv();
+        parent.appendChild(child1);
+        parent.appendChild(child2);
+        removeAllChildren(parent);
+        expect(parent.childNodes.length).toBe(0);
+    });
+
+    test("does nothing if there are no child nodes", () => {
+        const parent = createDiv();
+        removeAllChildren(parent);
+        expect(parent.childNodes.length).toBe(0);
     });
 
 });

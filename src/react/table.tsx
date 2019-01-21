@@ -1,10 +1,10 @@
 import * as React from "react";
 import {
     FixedTableView,
-    IColumn,
     ISort,
     ITableModel,
     ITableView,
+    IViewConfig,
     MultiSelectionAdapter,
     NOOP_SELECTION_ADAPTER,
     ObjectWithKey,
@@ -15,7 +15,8 @@ import {
     TableModel,
     TableView,
 } from "..";
-import { IViewConfig } from "../types";
+import { CellContent } from "./cell-content";
+import { IReactColumn } from "./types";
 
 function createSelectionAdapter<
     Key extends keyof Row,
@@ -43,7 +44,7 @@ export interface ITableProps<
 > {
     keyField: Key;
     rows: Row[];
-    columns: Array<IColumn<Row>>;
+    columns: Array<IReactColumn<Row>>;
     selection?: Set<KeyType>;
     selectionMode?: SelectionMode;
     sort?: ISort<Row>;
@@ -112,7 +113,11 @@ export class Table<
     }
 
     public render() {
-        return <div ref={this.handleRef} className={this.props.className} />;
+        return (
+            <div ref={this.handleRef} className={this.props.className}>
+                <CellContent model={this.model} view={this.view} />
+            </div>
+        );
     }
 
     private handleRef = (element: HTMLElement | null) => {
