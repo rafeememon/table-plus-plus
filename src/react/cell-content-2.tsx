@@ -1,27 +1,23 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { ITableModel, ITableView, ObjectWithKey } from "../types";
+import { ObjectWithKey } from "../types";
 import { removeAllChildren } from "../view/dom";
 import { IReactColumn } from "./types";
 
-interface ICellContentProps<
-    Key extends keyof Row,
-    Row extends ObjectWithKey<Key, KeyType>,
-    KeyType = Row[Key],
-> {
-    model: ITableModel<Key, Row, KeyType>;
-    view: ITableView;
+interface ICellContentProps<Row> {
+    rows: Row[];
+    columns: Array<IReactColumn<Row>>;
 }
 
 interface ICellContentState {
     portals: React.ReactPortal[];
 }
 
-export class CellContent<
+export class CellContent2<
     Key extends keyof Row,
     Row extends ObjectWithKey<Key, KeyType>,
     KeyType = Row[Key],
-> extends React.Component<ICellContentProps<Key, Row, KeyType>, ICellContentState> {
+> extends React.PureComponent<ICellContentProps<Row>, ICellContentState> {
 
     public state: ICellContentState = {
         portals: [],

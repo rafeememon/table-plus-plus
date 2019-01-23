@@ -62,6 +62,7 @@ export class Table<
 
     private model: ITableModel<Key, Row, KeyType>;
     private view: ITableView;
+    private cellContent: CellContent<Key, Row, KeyType> | null = null;
 
     public constructor(props: ITableProps<Key, Row, KeyType>, context?: any) {
         super(props, context);
@@ -80,6 +81,14 @@ export class Table<
             onClickHeader: sortAdapter.handleHeaderClick,
         };
         this.view = props.fixed ? new FixedTableView(config) : new TableView(config);
+
+        const _this = this;
+        this.model.addSelectionListener(() => {
+            const cellContent = _this.cellContent;
+            if (cellContent) {
+                cellContent.forceUpdate();
+            }
+        });
     }
 
     public componentWillUnmount() {
@@ -115,7 +124,7 @@ export class Table<
     public render() {
         return (
             <div ref={this.handleRef} className={this.props.className}>
-                <CellContent model={this.model} view={this.view} />
+                <CellContent ref={(cc) => this.cellContent = cc} model={this.model} view={this.view} />
             </div>
         );
     }

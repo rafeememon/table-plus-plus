@@ -4,6 +4,13 @@ import { IGeoJsonFeatureProperties } from "./types";
 
 export const COLUMNS_REACT: Array<IReactColumn<IGeoJsonFeatureProperties>> = [
     {
+        key: "code",
+        label: "",
+        reactRenderData() {
+            return <input type="checkbox" onChange={() => alert("hi")} />; //tslint:disable-line
+        },
+    },
+    {
         key: "time",
         label: "Time",
         renderData({time}) {

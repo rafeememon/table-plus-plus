@@ -87,6 +87,7 @@ export class TableBodyView<
     }
 
     private rerender() {
+        alert("rerender");
         const newElement = this.createTbodyElement();
         this.destroyTbodyElement(this.element);
         replaceWith(this.element, newElement);
