@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var dom_1 = require("./dom");
-var SORT_ARROW_CLASSNAME = "tpp-sort-arrow";
+exports.SORT_ARROW_CLASSNAME = "tpp-sort-arrow";
 function getClickedHeaderIndex(event) {
     if (event.target instanceof Element) {
         var th = dom_1.findParentElementOfType(event.target, "TH");
@@ -88,20 +88,20 @@ var TableHeaderView = /** @class */ (function () {
             return;
         }
         var sort = this.model.sort;
-        var oldArrow = th.getElementsByClassName(SORT_ARROW_CLASSNAME).item(0);
-        if (sort && sort.key === column.key) {
-            var arrow = document.createElement("span");
-            arrow.classList.add(SORT_ARROW_CLASSNAME);
-            arrow.appendChild(document.createTextNode(sort.ascending ? " ↑" : " ↓"));
-            if (oldArrow) {
-                th.replaceChild(arrow, oldArrow);
-            }
-            else {
-                th.appendChild(arrow);
-            }
+        var oldArrow = th.getElementsByClassName(exports.SORT_ARROW_CLASSNAME).item(0);
+        var ascending = sort != null && sort.key === column.key && sort.ascending;
+        var visible = sort != null && sort.key === column.key;
+        var arrow = document.createElement("span");
+        arrow.classList.add(exports.SORT_ARROW_CLASSNAME);
+        arrow.appendChild(document.createTextNode(ascending ? " ↑" : " ↓"));
+        if (!visible) {
+            arrow.style.visibility = "hidden";
         }
-        else if (oldArrow) {
-            th.removeChild(oldArrow);
+        if (oldArrow) {
+            th.replaceChild(arrow, oldArrow);
+        }
+        else {
+            th.appendChild(arrow);
         }
     };
     return TableHeaderView;

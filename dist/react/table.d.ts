@@ -1,13 +1,15 @@
 import * as React from "react";
-import { IColumn, ISort, ObjectWithKey, SelectionMode } from "..";
+import { ISort, ObjectWithKey, SelectionMode } from "..";
+import { IReactColumn } from "./types";
 export interface ITableProps<Key extends keyof Row, Row extends ObjectWithKey<Key, KeyType>, KeyType = Row[Key]> {
     keyField: Key;
     rows: Row[];
-    columns: Array<IColumn<Row>>;
+    columns: Array<IReactColumn<Row>>;
     selection?: Set<KeyType>;
     selectionMode?: SelectionMode;
     sort?: ISort<Row>;
     fixed?: boolean;
+    className?: string;
     onSelect?(newSelection: Set<KeyType>): void;
     onSort?(newSort: ISort<Row>): void;
 }

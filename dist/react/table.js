@@ -15,6 +15,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
 var __1 = require("..");
+var cell_content_1 = require("./cell-content");
 function createSelectionAdapter(mode, model, handler) {
     switch (mode) {
         case "single":
@@ -96,7 +97,8 @@ var Table = /** @class */ (function (_super) {
         }
     };
     Table.prototype.render = function () {
-        return React.createElement("div", { ref: this.handleRef });
+        return (React.createElement("div", { ref: this.handleRef, className: this.props.className },
+            React.createElement(cell_content_1.CellContent, { model: this.model, view: this.view })));
     };
     return Table;
 }(React.PureComponent));
