@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { ITableModel, ITableView, ObjectWithKey } from "../..";
+import { ITableModel, ITableView, ObjectWithKey } from "../types";
 import { removeAllChildren } from "../view/dom";
 import { IReactColumn } from "./types";
 
