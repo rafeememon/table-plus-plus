@@ -18,6 +18,11 @@ function removeFromArray<T>(elements: T[], element: T) {
     }
 }
 
+export function getSortableValue<Row>(row: Row, column: IColumn<Row>) {
+    const { key, getSortValue, getSortableText } = column;
+    return getSortValue ? getSortValue(row) : getSortableText ? getSortableText(row) : row[key];
+}
+
 export class TableModel<
     Key extends keyof Row,
     Row extends ObjectWithKey<Key, KeyType>,
@@ -149,10 +154,7 @@ export class TableModel<
             return rows;
         }
 
-        return sortBy(rows, (row) => {
-            return column.getSortValue ? column.getSortValue(row)
-                : column.getData ? column.getData(row) : row[key];
-        }, sort.ascending);
+        return sortBy(rows, (row) => getSortableValue(row, column), sort.ascending);
     }
 
 }

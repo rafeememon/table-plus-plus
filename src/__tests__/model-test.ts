@@ -1,8 +1,51 @@
-import { TableModel } from "../model";
+import { getSortableValue, TableModel } from "../model";
 import { sortBy } from "../sort";
 import { IColumn, ISort, ITableModel } from "../types";
 
 import { FOURTEENERS, IMountain, MOUNTAIN_COLUMNS, ULTRAS } from "../__demo__/mountains";
+
+describe("getSortableValue", () => {
+
+    test("returns the value directly by default", () => {
+        const text = getSortableValue({
+            field: "string",
+        }, {
+            key: "field",
+            label: "field",
+        });
+        expect(text).toEqual("string");
+    });
+
+    test("returns the value given by getSortValue", () => {
+        const text = getSortableValue({
+            field: "string",
+        }, {
+            key: "field",
+            label: "field",
+            getSortValue() {
+                return "returned by getSortValue";
+            },
+            getSortableText() {
+                return "returned by getSortableText";
+            },
+        });
+        expect(text).toEqual("returned by getSortValue");
+    });
+
+    test("returns the value given by getSortableText", () => {
+        const text = getSortableValue({
+            field: "string",
+        }, {
+            key: "field",
+            label: "field",
+            getSortableText() {
+                return "returned by getSortableText";
+            },
+        });
+        expect(text).toEqual("returned by getSortableText");
+    });
+
+});
 
 describe("Table model", () => {
 

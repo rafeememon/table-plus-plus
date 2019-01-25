@@ -3,9 +3,12 @@ export type ObjectWithKey<K extends string | number | symbol, V> = { [T in K]: V
 export interface IColumn<Row> {
     key: keyof Row;
     label: string;
-    getData?(row: Row): string;
+    // Used for displaying only; overrides getSortableText if both specified.
+    getText?(row: Row): string;
+    // Used for sorting only; overrides getSortableText if both specified.
     getSortValue?(row: Row): any;
-    renderData?(row: Row): string | Node;
+    // Used for both displaying and sorting.
+    getSortableText?(row: Row): string;
 }
 
 export interface ISort<Row> {

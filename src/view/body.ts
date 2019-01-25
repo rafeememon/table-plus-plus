@@ -13,19 +13,15 @@ function getClickedRowIndex(event: MouseEvent) {
     }
 }
 
-export function renderCellContent<Row>(row: Row, column: IColumn<Row>): Node {
-    let content: string | Node;
-
-    if (column.renderData) {
-        content = column.renderData(row);
-    } else if (column.getData) {
-        content = column.getData(row);
+export function getCellText<Row>(row: Row, column: IColumn<Row>): string {
+    if (column.getText) {
+        return column.getText(row);
+    } else if (column.getSortableText) {
+        return column.getSortableText(row);
     } else {
         const value = row[column.key];
-        content = value != null ? String(value) : "";
+        return value != null ? String(value) : "";
     }
-
-    return typeof content === "string" ? document.createTextNode(content) : content;
 }
 
 export class TableBodyView<
@@ -119,7 +115,7 @@ export class TableBodyView<
         for (const column of this.model.columns) {
             const td = document.createElement("td");
             td.style.boxSizing = "border-box";
-            td.appendChild(renderCellContent(row, column));
+            td.appendChild(document.createTextNode(getCellText(row, column)));
             tr.appendChild(td);
         }
         return tr;
