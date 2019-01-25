@@ -23,12 +23,6 @@ export function getChildIndex(element: Node) {
     return count;
 }
 
-export function removeAllChildren(node: Node) {
-    while (node.lastChild) {
-        node.removeChild(node.lastChild);
-    }
-}
-
 export function applyStyles(element: HTMLElement, styles: Partial<CSSStyleDeclaration>) {
     for (const key in styles) { // tslint:disable-line:forin
         const value = styles[key];
