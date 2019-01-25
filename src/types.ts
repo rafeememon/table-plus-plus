@@ -9,6 +9,10 @@ export interface IColumn<Row> {
     getSortValue?(row: Row): any;
     // Used for both displaying and sorting.
     getSortableText?(row: Row): string;
+    // If specified, renders a link.
+    getHref?(row: Row): string;
+    // If specified, skips the default row click handler.
+    onClick?(row: Row): void;
 }
 
 export interface ISort<Row> {

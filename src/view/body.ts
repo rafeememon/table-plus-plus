@@ -13,6 +13,27 @@ function getClickedRowIndex(event: MouseEvent) {
     }
 }
 
+function getClickedColumnIndex(event: MouseEvent) {
+    if (event.target instanceof Element) {
+        const td = findParentElementOfType(event.target, "TD");
+        return td && getChildIndex(td);
+    } else {
+        return null;
+    }
+}
+
+export function renderCellContent<Row>(row: Row, column: IColumn<Row>) {
+    const textNode = document.createTextNode(getCellText(row, column));
+    if (column.getHref) {
+        const link = document.createElement("a");
+        link.href = column.getHref(row);
+        link.appendChild(textNode);
+        return link;
+    } else {
+        return textNode;
+    }
+}
+
 export function getCellText<Row>(row: Row, column: IColumn<Row>): string {
     if (column.getText) {
         return column.getText(row);
@@ -77,7 +98,15 @@ export class TableBodyView<
 
     private handleClick = (event: MouseEvent) => {
         const rowIndex = getClickedRowIndex(event);
-        if (rowIndex != null) {
+        const columnIndex = getClickedColumnIndex(event);
+        if (rowIndex == null || columnIndex == null) {
+            return;
+        }
+
+        const column = this.model.columns[columnIndex];
+        if (column.onClick) {
+            column.onClick(this.model.sortedRows[rowIndex]);
+        } else {
             this.clickHandler(event, rowIndex);
         }
     }
@@ -115,7 +144,7 @@ export class TableBodyView<
         for (const column of this.model.columns) {
             const td = document.createElement("td");
             td.style.boxSizing = "border-box";
-            td.appendChild(document.createTextNode(getCellText(row, column)));
+            td.appendChild(renderCellContent(row, column));
             tr.appendChild(td);
         }
         return tr;

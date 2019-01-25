@@ -1,5 +1,5 @@
 import { ITableModel, ITableSectionView, TableModel } from "../..";
-import { getCellText, TableBodyView } from "../../view/body";
+import { getCellText, renderCellContent, TableBodyView } from "../../view/body";
 import { ITestRow, TEST_COLUMNS, TEST_COLUMNS_2, TEST_ROWS, TEST_ROWS_2 } from "./test-data";
 
 export function getBodyTd(view: ITableSectionView, rowIndex: number, columnIndex: number) {
@@ -29,6 +29,7 @@ describe("TableBodyView", () => {
         view = new TableBodyView(model, (_, index) => {
             clickedIndex = index;
         });
+        clickedIndex = null;
     });
 
     test("renders the body", () => {
@@ -74,6 +75,25 @@ describe("TableBodyView", () => {
         }
     });
 
+    test("detects the correct clicked cell", () => {
+        let clickedId: number | null = null;
+        model.setColumns([
+            {
+                key: "id",
+                label: "ID",
+                onClick({id}) {
+                    clickedId = id;
+                },
+            },
+        ]);
+        for (let index = 0; index < model.sortedRows.length; index++) {
+            getBodyTd(view, index, 0).click();
+            expect(clickedId).toEqual(model.sortedRows[index].id);
+            expect(clickedIndex).toBeNull();
+            clickedId = null;
+        }
+    });
+
     function validateElement() {
         const { sortedRows, columns, selection } = model;
         expect(view.element.tagName).toEqual("TBODY");
@@ -85,9 +105,9 @@ describe("TableBodyView", () => {
             expect(getBodyTr(view, rowIndex).getAttribute("data-selected")).toEqual(expectedDataSelected);
 
             for (let columnIndex = 0; columnIndex < columns.length; columnIndex++) {
-                const expected = getCellText(row, columns[columnIndex]);
+                const expected = renderCellContent(row, columns[columnIndex]);
                 const actual = getBodyTd(view, rowIndex, columnIndex).childNodes[0];
-                expect(actual.textContent).toEqual(expected);
+                expect(actual).toEqual(expected);
             }
         }
     }
@@ -143,6 +163,36 @@ describe("getCellText", () => {
             },
         });
         expect(text).toEqual("returned by getSortableText");
+    });
+
+});
+
+describe("renderCellContent", () => {
+
+    test("renders the value", () => {
+        const node = renderCellContent({
+            field: "string",
+        }, {
+            key: "field",
+            label: "field",
+        });
+        expect(node).toEqual(document.createTextNode("string"));
+    });
+
+    test("renders a link", () => {
+        const node = renderCellContent({
+            field: "string",
+        }, {
+            key: "field",
+            label: "field",
+            getHref() {
+                return "http://www.example.com";
+            },
+        });
+        const expected = document.createElement("a");
+        expected.href = "http://www.example.com";
+        expected.appendChild(document.createTextNode("string"));
+        expect(node).toEqual(expected);
     });
 
 });
