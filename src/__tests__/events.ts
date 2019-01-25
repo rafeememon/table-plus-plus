@@ -1,4 +1,4 @@
-export function createMouseEvent(modifier?: "SHIFT" | "CONTROL") {
+export function createMouseEvent(modifier?: "SHIFT" | "CONTROL" | "META") {
     return {
         getModifierState(keyArg: string) {
             switch (keyArg) {
@@ -6,6 +6,8 @@ export function createMouseEvent(modifier?: "SHIFT" | "CONTROL") {
                     return modifier === "SHIFT";
                 case "Control":
                     return modifier === "CONTROL";
+                case "Meta":
+                    return modifier === "META";
                 default:
                     return false;
             }

@@ -109,4 +109,13 @@ describe("Multi selection adapter", () => {
         expect(model.selection).toEqual(getKeys(1, 2));
     });
 
+    test("handles meta click the same way as control click", () => {
+        adapter.handleRowClick(createMouseEvent("META"), 0);
+        expect(model.selection).toEqual(getKeys(0));
+        adapter.handleRowClick(createMouseEvent("META"), 1);
+        expect(model.selection).toEqual(getKeys(0, 1));
+        adapter.handleRowClick(createMouseEvent("META"), 0);
+        expect(model.selection).toEqual(getKeys(1));
+    });
+
 });

@@ -25,7 +25,7 @@ export class MultiSelectionAdapter<
     public handleRowClick = (event: MouseEvent, rowIndex: number) => {
         if (event.getModifierState("Shift")) {
             this.handleShiftRowClick(rowIndex);
-        } else if (event.getModifierState("Control")) {
+        } else if (event.getModifierState("Control") || event.getModifierState("Meta")) {
             this.handleControlRowClick(rowIndex);
         } else {
             this.handleNormalRowClick(rowIndex);
