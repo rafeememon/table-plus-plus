@@ -23,7 +23,9 @@ export class SortAdapter<
 export function sortBy<T>(elements: T[], getSortValue: (element: T) => any, ascending: boolean) {
     const sortValues = new Map<T, any>();
     for (const element of elements) {
-        sortValues.set(element, getSortValue(element));
+        if (!sortValues.has(element)) {
+            sortValues.set(element, getSortValue(element));
+        }
     }
 
     const ascendingFactor = ascending ? 1 : -1;
