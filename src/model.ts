@@ -18,25 +18,38 @@ function removeFromArray<T>(elements: T[], element: T) {
     }
 }
 
+export function getSortableValue<R>(row: R, column: IColumn<R>) {
+    const { key, getSortValue, getSortableText } = column;
+    if (getSortValue) {
+        return getSortValue(row);
+    } else if (getSortableText) {
+        return getSortableText(row);
+    } else if (key in row) {
+        return row[key as keyof R];
+    } else {
+        return null;
+    }
+}
+
 export class TableModel<
-    Key extends keyof Row,
-    Row extends ObjectWithKey<Key, KeyType>,
-    KeyType = Row[Key],
-> implements ITableModel<Key, Row, KeyType> {
+    K extends keyof R,
+    R extends ObjectWithKey<K, V>,
+    V = R[K],
+> implements ITableModel<K, R, V> {
 
-    public keyField: Key;
-    public columns: Array<IColumn<Row>>;
-    public selection: Set<KeyType>;
-    public sort: ISort<Row> | undefined;
-    public sortedRows: Row[];
+    public keyField: K;
+    public columns: Array<IColumn<R>>;
+    public selection: Set<V>;
+    public sort: ISort | undefined;
+    public sortedRows: R[];
 
-    private rows: Row[];
-    private rowListeners: Array<RowEventListener<Row>> = [];
-    private columnListeners: Array<ColumnEventListener<Row>> = [];
-    private selectionListeners: Array<SelectionEventListener<KeyType>> = [];
-    private sortListeners: Array<SortEventListener<Row>> = [];
+    private rows: R[];
+    private rowListeners: Array<RowEventListener<R>> = [];
+    private columnListeners: Array<ColumnEventListener<R>> = [];
+    private selectionListeners: Array<SelectionEventListener<V>> = [];
+    private sortListeners: SortEventListener[] = [];
 
-    public constructor(config: ITableConfig<Key, Row, KeyType>) {
+    public constructor(config: ITableConfig<K, R, V>) {
         this.keyField = config.keyField;
         this.rows = config.rows;
         this.columns = config.columns;
@@ -45,7 +58,7 @@ export class TableModel<
         this.sortedRows = this.sortRows();
     }
 
-    public setRows(newRows: Row[]) {
+    public setRows(newRows: R[]) {
         const oldRows = this.rows;
         this.rows = newRows;
         this.sortedRows = this.sortRows();
@@ -54,7 +67,7 @@ export class TableModel<
         }
     }
 
-    public setColumns(newColumns: Array<IColumn<Row>>) {
+    public setColumns(newColumns: Array<IColumn<R>>) {
         const oldColumns = this.columns;
         this.columns = newColumns;
 
@@ -72,7 +85,7 @@ export class TableModel<
         }
     }
 
-    public setSelection(newSelection: Set<KeyType>) {
+    public setSelection(newSelection: Set<V>) {
         const oldSelection = this.selection;
         this.selection = newSelection;
         for (const listener of this.selectionListeners) {
@@ -80,7 +93,7 @@ export class TableModel<
         }
     }
 
-    public setSort(newSort: ISort<Row> | undefined) {
+    public setSort(newSort: ISort | undefined) {
         const oldSort = this.sort;
         this.sort = newSort;
 
@@ -95,39 +108,39 @@ export class TableModel<
         }
     }
 
-    public isSelected(row: Row) {
+    public isSelected(row: R) {
         return this.selection.has(row[this.keyField]);
     }
 
-    public addRowListener(listener: RowEventListener<Row>) {
+    public addRowListener(listener: RowEventListener<R>) {
         this.rowListeners.push(listener);
     }
 
-    public addColumnListener(listener: ColumnEventListener<Row>) {
+    public addColumnListener(listener: ColumnEventListener<R>) {
         this.columnListeners.push(listener);
     }
 
-    public addSelectionListener(listener: SelectionEventListener<KeyType>) {
+    public addSelectionListener(listener: SelectionEventListener<V>) {
         this.selectionListeners.push(listener);
     }
 
-    public addSortListener(listener: SortEventListener<Row>) {
+    public addSortListener(listener: SortEventListener) {
         this.sortListeners.push(listener);
     }
 
-    public removeRowListener(listener: RowEventListener<Row>) {
+    public removeRowListener(listener: RowEventListener<R>) {
         removeFromArray(this.rowListeners, listener);
     }
 
-    public removeColumnListener(listener: ColumnEventListener<Row>) {
+    public removeColumnListener(listener: ColumnEventListener<R>) {
         removeFromArray(this.columnListeners, listener);
     }
 
-    public removeSelectionListener(listener: SelectionEventListener<KeyType>) {
+    public removeSelectionListener(listener: SelectionEventListener<V>) {
         removeFromArray(this.selectionListeners, listener);
     }
 
-    public removeSortListener(listener: SortEventListener<Row>) {
+    public removeSortListener(listener: SortEventListener) {
         removeFromArray(this.sortListeners, listener);
     }
 
@@ -138,7 +151,7 @@ export class TableModel<
         this.sortListeners = [];
     }
 
-    private sortRows(): Row[] {
+    private sortRows(): R[] {
         const { rows, columns, sort } = this;
         if (!sort) {
             return rows;
@@ -149,10 +162,7 @@ export class TableModel<
             return rows;
         }
 
-        return sortBy(rows, (row) => {
-            return column.getSortValue ? column.getSortValue(row)
-                : column.getData ? column.getData(row) : row[key];
-        }, sort.ascending);
+        return sortBy(rows, (row) => getSortableValue(row, column), sort.ascending);
     }
 
 }

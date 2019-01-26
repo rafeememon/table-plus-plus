@@ -10,16 +10,16 @@ function findIndex<T>(elements: T[], fn: (element: T) => boolean) {
 }
 
 export class MultiSelectionAdapter<
-    Key extends keyof Row,
-    Row extends ObjectWithKey<Key, KeyType>,
-    KeyType = Row[Key],
+    K extends keyof R,
+    R extends ObjectWithKey<K, V>,
+    V = R[K],
 > implements ISelectionAdapter {
 
-    private anchorKey: KeyType | undefined;
+    private anchorKey: V | undefined;
 
     public constructor(
-        private model: ITableModel<Key, Row, KeyType>,
-        private handler: SelectionHandler<KeyType>,
+        private model: ITableModel<K, R, V>,
+        private handler: SelectionHandler<V>,
     ) {}
 
     public handleRowClick = (event: MouseEvent, rowIndex: number) => {
@@ -43,7 +43,7 @@ export class MultiSelectionAdapter<
             const { sortedRows, keyField } = this.model;
             const anchorIndex = findIndex(sortedRows, (r) => r[keyField] === this.anchorKey);
             if (anchorIndex != null) {
-                const newSelection = new Set<KeyType>();
+                const newSelection = new Set<V>();
                 const min = Math.min(rowIndex, anchorIndex);
                 const max = Math.max(rowIndex, anchorIndex);
                 for (let index = min; index <= max; index++) {

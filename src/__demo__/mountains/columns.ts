@@ -12,21 +12,21 @@ export const MOUNTAIN_COLUMNS: Array<IColumn<IMountain>> = [
     {
         key: "elevationFt",
         label: "Elevation",
-        renderData({elevationFt}) {
+        getText({elevationFt}) {
             return formatFeet(elevationFt);
         },
     },
     {
         key: "prominenceFt",
         label: "Prominence",
-        renderData({prominenceFt}) {
+        getText({prominenceFt}) {
             return formatFeet(prominenceFt);
         },
     },
     {
         key: "climbed",
         label: "Climbed",
-        getData({climbed}) {
+        getText({climbed}) {
             return climbed ? "Yes" : "No";
         },
         getSortValue({climbed}) {

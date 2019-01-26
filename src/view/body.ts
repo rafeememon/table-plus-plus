@@ -13,32 +13,52 @@ function getClickedRowIndex(event: MouseEvent) {
     }
 }
 
-export function renderCellContent<Row>(row: Row, column: IColumn<Row>): Node {
-    let content: string | Node;
-
-    if (column.renderData) {
-        content = column.renderData(row);
-    } else if (column.getData) {
-        content = column.getData(row);
+function getClickedColumnIndex(event: MouseEvent) {
+    if (event.target instanceof Element) {
+        const td = findParentElementOfType(event.target, "TD");
+        return td && getChildIndex(td);
     } else {
-        const value = row[column.key];
-        content = value != null ? String(value) : "";
+        return null;
     }
+}
 
-    return typeof content === "string" ? document.createTextNode(content) : content;
+export function renderCellContent<R>(row: R, column: IColumn<R>) {
+    const textNode = document.createTextNode(getCellText(row, column));
+    if (column.getHref) {
+        const link = document.createElement("a");
+        link.href = column.getHref(row);
+        link.appendChild(textNode);
+        return link;
+    } else {
+        return textNode;
+    }
+}
+
+export function getCellText<R>(row: R, column: IColumn<R>): string {
+    const { key, getText, getSortableText } = column;
+    if (getText) {
+        return getText(row);
+    } else if (getSortableText) {
+        return getSortableText(row);
+    } else if (key in row) {
+        const value = row[key as keyof R];
+        return value != null ? String(value) : "";
+    } else {
+        return "";
+    }
 }
 
 export class TableBodyView<
-    Key extends keyof Row,
-    Row extends ObjectWithKey<Key, KeyType>,
-    KeyType = Row[Key],
+    K extends keyof R,
+    R extends ObjectWithKey<K, V>,
+    V = R[K],
 > implements ITableSectionView {
 
     public element: HTMLTableSectionElement;
-    private trElements: Map<Row, HTMLTableRowElement> = new Map();
+    private trElements: Map<R, HTMLTableRowElement> = new Map();
 
     public constructor(
-        private model: ITableModel<Key, Row, KeyType>,
+        private model: ITableModel<K, R, V>,
         private clickHandler: RowClickHandler,
     ) {
         this.element = this.createTbodyElement();
@@ -65,7 +85,7 @@ export class TableBodyView<
         this.rerender();
     }
 
-    private handleSelectionChanged = (newSelection: Set<KeyType>, oldSelection: Set<KeyType>) => {
+    private handleSelectionChanged = (newSelection: Set<V>, oldSelection: Set<V>) => {
         const { keyField, sortedRows } = this.model;
         const keysToUpdate = union(newSelection, oldSelection);
         for (const row of sortedRows) {
@@ -81,7 +101,15 @@ export class TableBodyView<
 
     private handleClick = (event: MouseEvent) => {
         const rowIndex = getClickedRowIndex(event);
-        if (rowIndex != null) {
+        const columnIndex = getClickedColumnIndex(event);
+        if (rowIndex == null || columnIndex == null) {
+            return;
+        }
+
+        const column = this.model.columns[columnIndex];
+        if (column.onClick) {
+            column.onClick(this.model.sortedRows[rowIndex]);
+        } else {
             this.clickHandler(event, rowIndex);
         }
     }
@@ -95,7 +123,7 @@ export class TableBodyView<
 
     private createTbodyElement() {
         const tbody = document.createElement("tbody");
-        const newTrElements = new Map<Row, HTMLTableRowElement>();
+        const newTrElements = new Map<R, HTMLTableRowElement>();
 
         for (const row of this.model.sortedRows) {
             const oldTr = this.trElements.get(row);
@@ -114,18 +142,19 @@ export class TableBodyView<
         tbody.removeEventListener("click", this.handleClick);
     }
 
-    private createTrElement(row: Row) {
+    private createTrElement(row: R) {
         const tr = document.createElement("tr");
         for (const column of this.model.columns) {
             const td = document.createElement("td");
             td.style.boxSizing = "border-box";
+            td.setAttribute("data-column-key", column.key);
             td.appendChild(renderCellContent(row, column));
             tr.appendChild(td);
         }
         return tr;
     }
 
-    private decorateTrElement(row: Row, tr = this.trElements.get(row)) {
+    private decorateTrElement(row: R, tr = this.trElements.get(row)) {
         if (!tr) {
             return;
         }

@@ -1,8 +1,55 @@
-import { TableModel } from "../model";
+import { getSortableValue, TableModel } from "../model";
 import { sortBy } from "../sort";
 import { IColumn, ISort, ITableModel } from "../types";
 
 import { FOURTEENERS, IMountain, MOUNTAIN_COLUMNS, ULTRAS } from "../__demo__/mountains";
+
+describe("getSortableValue", () => {
+
+    test("returns the value directly by default", () => {
+        const value = getSortableValue({
+            field: "string",
+        }, {
+            key: "field",
+        });
+        expect(value).toEqual("string");
+    });
+
+    test("returns null for a nonexistent value", () => {
+        const value = getSortableValue({}, {
+            key: "field",
+        });
+        expect(value).toEqual(null);
+    });
+
+    test("returns the value given by getSortValue", () => {
+        const value = getSortableValue({
+            field: "string",
+        }, {
+            key: "field",
+            getSortValue() {
+                return "returned by getSortValue";
+            },
+            getSortableText() {
+                return "returned by getSortableText";
+            },
+        });
+        expect(value).toEqual("returned by getSortValue");
+    });
+
+    test("returns the value given by getSortableText", () => {
+        const value = getSortableValue({
+            field: "string",
+        }, {
+            key: "field",
+            getSortableText() {
+                return "returned by getSortableText";
+            },
+        });
+        expect(value).toEqual("returned by getSortableText");
+    });
+
+});
 
 describe("Table model", () => {
 
@@ -111,7 +158,7 @@ describe("Table model", () => {
 
     test("sort listener is called when sort is updated", () => {
         const oldSort = model.sort;
-        const newSort: ISort<IMountain> = {
+        const newSort: ISort = {
             key: "elevationFt",
             ascending: false,
         };

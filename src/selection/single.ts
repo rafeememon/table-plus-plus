@@ -1,20 +1,20 @@
 import { ISelectionAdapter, ITableModel, ObjectWithKey, SelectionHandler } from "../types";
 
 export class SingleSelectionAdapter<
-    Key extends keyof Row,
-    Row extends ObjectWithKey<Key, KeyType>,
-    KeyType = Row[Key],
+    K extends keyof R,
+    R extends ObjectWithKey<K, V>,
+    V = R[K],
 > implements ISelectionAdapter {
 
     public constructor(
-        private model: ITableModel<Key, Row, KeyType>,
-        private handler: SelectionHandler<KeyType>,
+        private model: ITableModel<K, R, V>,
+        private handler: SelectionHandler<V>,
     ) {}
 
     public handleRowClick = (_event: MouseEvent, rowIndex: number) => {
         const { sortedRows, keyField, selection } = this.model;
         const key = sortedRows[rowIndex][keyField];
-        const newSelection = new Set<KeyType>();
+        const newSelection = new Set<V>();
         if (!selection.has(key)) {
             newSelection.add(key);
         }

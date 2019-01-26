@@ -3,16 +3,19 @@ import { IGeoJsonFeatureProperties } from "./types";
 
 export const COLUMNS: Array<IColumn<IGeoJsonFeatureProperties>> = [
     {
+        key: "selected",
+    },
+    {
         key: "time",
         label: "Time",
-        renderData({time}) {
+        getText({time}) {
             return new Date(time).toLocaleString();
         },
     },
     {
         key: "mag",
         label: "Magnitude",
-        renderData({mag}) {
+        getText({mag}) {
             return mag.toFixed(1);
         },
     },
@@ -23,12 +26,11 @@ export const COLUMNS: Array<IColumn<IGeoJsonFeatureProperties>> = [
     {
         key: "url",
         label: "Details",
-        renderData({url}) {
-            const link = document.createElement("a");
-            link.appendChild(document.createTextNode("Details"));
-            link.href = url;
-            link.target = "_blank";
-            return link;
+        getText() {
+            return "Details";
+        },
+        getHref({url}) {
+            return url;
         },
     },
 ];

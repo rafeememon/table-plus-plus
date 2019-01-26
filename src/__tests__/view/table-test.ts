@@ -44,7 +44,7 @@ describe("TableView", () => {
     });
 
     test("detects the correct clicked row", () => {
-        for (let index = 0; index < model.columns.length; index++) {
+        for (let index = 0; index < model.sortedRows.length; index++) {
             getBodyTd(view.bodyView, index, 0).click();
             expect(clickedRowIndex).toEqual(index);
         }

@@ -69,7 +69,7 @@ describe("TableHeaderView", () => {
             const { childNodes } = getHeaderTh(view, index);
             expect(childNodes.length).toEqual(2);
 
-            expect(childNodes[0]).toEqual(document.createTextNode(column.label));
+            expect(childNodes[0]).toEqual(document.createTextNode(column.label || ""));
 
             const arrow = childNodes[1] as HTMLElement;
             expect(arrow.classList.contains(SORT_ARROW_CLASSNAME)).toBe(true);

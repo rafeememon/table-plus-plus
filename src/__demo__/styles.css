@@ -19,3 +19,11 @@ th, td {
     white-space: nowrap;
     cursor: pointer;
 }
+
+td[data-column-key="selected"]::before {
+    content: "☐";
+}
+
+tr[data-selected] td[data-column-key="selected"]::before {
+    content: "☑";
+}

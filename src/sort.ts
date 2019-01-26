@@ -1,14 +1,14 @@
 import { ISortAdapter, ITableModel, ObjectWithKey, SortHandler } from "./types";
 
 export class SortAdapter<
-    Key extends keyof Row,
-    Row extends ObjectWithKey<Key, KeyType>,
-    KeyType = Row[Key],
+    K extends keyof R,
+    R extends ObjectWithKey<K, V>,
+    V = R[K],
 > implements ISortAdapter {
 
     public constructor(
-        private model: ITableModel<Key, Row, KeyType>,
-        private handler: SortHandler<Row>,
+        private model: ITableModel<K, R, V>,
+        private handler: SortHandler,
     ) {}
 
     public handleHeaderClick = (_event: MouseEvent, headerIndex: number) => {
@@ -23,7 +23,9 @@ export class SortAdapter<
 export function sortBy<T>(elements: T[], getSortValue: (element: T) => any, ascending: boolean) {
     const sortValues = new Map<T, any>();
     for (const element of elements) {
-        sortValues.set(element, getSortValue(element));
+        if (!sortValues.has(element)) {
+            sortValues.set(element, getSortValue(element));
+        }
     }
 
     const ascendingFactor = ascending ? 1 : -1;

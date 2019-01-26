@@ -11,7 +11,7 @@ import "../styles.css";
 interface IState {
     rows: IGeoJsonFeatureProperties[];
     selection: Set<string>;
-    sort: ISort<IGeoJsonFeatureProperties> | undefined;
+    sort: ISort | undefined;
 }
 
 class Demo extends React.PureComponent<{}, IState> {
@@ -51,7 +51,7 @@ class Demo extends React.PureComponent<{}, IState> {
         this.setState({ selection });
     }
 
-    private handleSort = (sort: ISort<IGeoJsonFeatureProperties>) => {
+    private handleSort = (sort: ISort) => {
         this.setState({ sort });
     }
 
