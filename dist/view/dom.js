@@ -25,12 +25,6 @@ function getChildIndex(element) {
     return count;
 }
 exports.getChildIndex = getChildIndex;
-function removeAllChildren(node) {
-    while (node.lastChild) {
-        node.removeChild(node.lastChild);
-    }
-}
-exports.removeAllChildren = removeAllChildren;
 function applyStyles(element, styles) {
     for (var key in styles) { // tslint:disable-line:forin
         var value = styles[key];

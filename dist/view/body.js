@@ -12,21 +12,45 @@ function getClickedRowIndex(event) {
         return null;
     }
 }
-function renderCellContent(row, column) {
-    var content;
-    if (column.renderData) {
-        content = column.renderData(row);
-    }
-    else if (column.getData) {
-        content = column.getData(row);
+function getClickedColumnIndex(event) {
+    if (event.target instanceof Element) {
+        var td = dom_1.findParentElementOfType(event.target, "TD");
+        return td && dom_1.getChildIndex(td);
     }
     else {
-        var value = row[column.key];
-        content = value != null ? String(value) : "";
+        return null;
     }
-    return typeof content === "string" ? document.createTextNode(content) : content;
+}
+function renderCellContent(row, column) {
+    var textNode = document.createTextNode(getCellText(row, column));
+    if (column.getHref) {
+        var link = document.createElement("a");
+        link.href = column.getHref(row);
+        link.appendChild(textNode);
+        return link;
+    }
+    else {
+        return textNode;
+    }
 }
 exports.renderCellContent = renderCellContent;
+function getCellText(row, column) {
+    var key = column.key, getText = column.getText, getSortableText = column.getSortableText;
+    if (getText) {
+        return getText(row);
+    }
+    else if (getSortableText) {
+        return getSortableText(row);
+    }
+    else if (key in row) {
+        var value = row[key];
+        return value != null ? String(value) : "";
+    }
+    else {
+        return "";
+    }
+}
+exports.getCellText = getCellText;
 var TableBodyView = /** @class */ (function () {
     function TableBodyView(model, clickHandler) {
         var _this = this;
@@ -55,7 +79,15 @@ var TableBodyView = /** @class */ (function () {
         };
         this.handleClick = function (event) {
             var rowIndex = getClickedRowIndex(event);
-            if (rowIndex != null) {
+            var columnIndex = getClickedColumnIndex(event);
+            if (rowIndex == null || columnIndex == null) {
+                return;
+            }
+            var column = _this.model.columns[columnIndex];
+            if (column.onClick) {
+                column.onClick(_this.model.sortedRows[rowIndex]);
+            }
+            else {
                 _this.clickHandler(event, rowIndex);
             }
         };
@@ -102,6 +134,7 @@ var TableBodyView = /** @class */ (function () {
             var column = _a[_i];
             var td = document.createElement("td");
             td.style.boxSizing = "border-box";
+            td.setAttribute("data-column-key", column.key);
             td.appendChild(renderCellContent(row, column));
             tr.appendChild(td);
         }

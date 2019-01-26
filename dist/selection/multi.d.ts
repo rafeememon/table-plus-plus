@@ -1,9 +1,9 @@
 import { ISelectionAdapter, ITableModel, ObjectWithKey, SelectionHandler } from "../types";
-export declare class MultiSelectionAdapter<Key extends keyof Row, Row extends ObjectWithKey<Key, KeyType>, KeyType = Row[Key]> implements ISelectionAdapter {
+export declare class MultiSelectionAdapter<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> implements ISelectionAdapter {
     private model;
     private handler;
     private anchorKey;
-    constructor(model: ITableModel<Key, Row, KeyType>, handler: SelectionHandler<KeyType>);
+    constructor(model: ITableModel<K, R, V>, handler: SelectionHandler<V>);
     handleRowClick: (event: MouseEvent, rowIndex: number) => void;
     private handleNormalRowClick;
     private handleShiftRowClick;

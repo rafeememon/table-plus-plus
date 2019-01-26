@@ -7,6 +7,22 @@ function removeFromArray(elements, element) {
         elements.splice(index, 1);
     }
 }
+function getSortableValue(row, column) {
+    var key = column.key, getSortValue = column.getSortValue, getSortableText = column.getSortableText;
+    if (getSortValue) {
+        return getSortValue(row);
+    }
+    else if (getSortableText) {
+        return getSortableText(row);
+    }
+    else if (key in row) {
+        return row[key];
+    }
+    else {
+        return null;
+    }
+}
+exports.getSortableValue = getSortableValue;
 var TableModel = /** @class */ (function () {
     function TableModel(config) {
         this.rowListeners = [];
@@ -110,10 +126,7 @@ var TableModel = /** @class */ (function () {
         if (!column) {
             return rows;
         }
-        return sort_1.sortBy(rows, function (row) {
-            return column.getSortValue ? column.getSortValue(row)
-                : column.getData ? column.getData(row) : row[key];
-        }, sort.ascending);
+        return sort_1.sortBy(rows, function (row) { return getSortableValue(row, column); }, sort.ascending);
     };
     return TableModel;
 }());

@@ -1,11 +1,12 @@
 import { IColumn, ITableModel, ITableSectionView, ObjectWithKey, RowClickHandler } from "../types";
-export declare function renderCellContent<Row>(row: Row, column: IColumn<Row>): Node;
-export declare class TableBodyView<Key extends keyof Row, Row extends ObjectWithKey<Key, KeyType>, KeyType = Row[Key]> implements ITableSectionView {
+export declare function renderCellContent<R>(row: R, column: IColumn<R>): Text | HTMLAnchorElement;
+export declare function getCellText<R>(row: R, column: IColumn<R>): string;
+export declare class TableBodyView<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> implements ITableSectionView {
     private model;
     private clickHandler;
     element: HTMLTableSectionElement;
     private trElements;
-    constructor(model: ITableModel<Key, Row, KeyType>, clickHandler: RowClickHandler);
+    constructor(model: ITableModel<K, R, V>, clickHandler: RowClickHandler);
     destroy(): void;
     private handleRowsChanged;
     private handleColumnsChanged;

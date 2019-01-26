@@ -1,24 +1,23 @@
 import * as React from "react";
-import { ISort, ObjectWithKey, SelectionMode } from "..";
-import { IReactColumn } from "./types";
-export interface ITableProps<Key extends keyof Row, Row extends ObjectWithKey<Key, KeyType>, KeyType = Row[Key]> {
-    keyField: Key;
-    rows: Row[];
-    columns: Array<IReactColumn<Row>>;
-    selection?: Set<KeyType>;
+import { IColumn, ISort, ObjectWithKey, SelectionMode } from "..";
+export interface ITableProps<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> {
+    keyField: K;
+    rows: R[];
+    columns: Array<IColumn<R>>;
+    selection?: Set<V>;
     selectionMode?: SelectionMode;
-    sort?: ISort<Row>;
+    sort?: ISort;
     fixed?: boolean;
     className?: string;
-    onSelect?(newSelection: Set<KeyType>): void;
-    onSort?(newSort: ISort<Row>): void;
+    onSelect?(newSelection: Set<V>): void;
+    onSort?(newSort: ISort): void;
 }
-export declare class Table<Key extends keyof Row, Row extends ObjectWithKey<Key, KeyType>, KeyType = Row[Key]> extends React.PureComponent<ITableProps<Key, Row, KeyType>> {
+export declare class Table<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> extends React.PureComponent<ITableProps<K, R, V>> {
     private model;
     private view;
-    constructor(props: ITableProps<Key, Row, KeyType>, context?: any);
+    constructor(props: ITableProps<K, R, V>, context?: any);
     componentWillUnmount(): void;
-    componentDidUpdate(oldProps: ITableProps<Key, Row, KeyType>): void;
+    componentDidUpdate(oldProps: ITableProps<K, R, V>): void;
     render(): JSX.Element;
     private handleRef;
     private handleSelect;

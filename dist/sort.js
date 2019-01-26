@@ -19,7 +19,9 @@ function sortBy(elements, getSortValue, ascending) {
     var sortValues = new Map();
     for (var _i = 0, elements_1 = elements; _i < elements_1.length; _i++) {
         var element = elements_1[_i];
-        sortValues.set(element, getSortValue(element));
+        if (!sortValues.has(element)) {
+            sortValues.set(element, getSortValue(element));
+        }
     }
     var ascendingFactor = ascending ? 1 : -1;
     return elements.slice(0).sort(function (element1, element2) {

@@ -1,9 +1,9 @@
 import { ITableSectionView, ITableView, IViewConfig, ObjectWithKey } from "../types";
-export declare class TableView<Key extends keyof Row, Row extends ObjectWithKey<Key, KeyType>, KeyType = Row[Key]> implements ITableView {
+export declare class TableView<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> implements ITableView {
     element: HTMLTableElement;
     headerView: ITableSectionView;
     bodyView: ITableSectionView;
-    constructor(config: IViewConfig<Key, Row, KeyType>);
+    constructor(config: IViewConfig<K, R, V>);
     initialize(): void;
     destroy(): void;
 }

@@ -17,7 +17,7 @@ var MultiSelectionAdapter = /** @class */ (function () {
             if (event.getModifierState("Shift")) {
                 _this.handleShiftRowClick(rowIndex);
             }
-            else if (event.getModifierState("Control")) {
+            else if (event.getModifierState("Control") || event.getModifierState("Meta")) {
                 _this.handleControlRowClick(rowIndex);
             }
             else {

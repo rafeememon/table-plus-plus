@@ -1,53 +1,55 @@
 export declare type ObjectWithKey<K extends string | number | symbol, V> = {
     [T in K]: V;
 };
-export interface IColumn<Row> {
-    key: keyof Row;
-    label: string;
-    getData?(row: Row): string;
-    getSortValue?(row: Row): any;
-    renderData?(row: Row): string | Node;
+export interface IColumn<R> {
+    key: string;
+    label?: string;
+    getText?(row: R): string;
+    getSortValue?(row: R): any;
+    getSortableText?(row: R): string;
+    getHref?(row: R): string;
+    onClick?(row: R): void;
 }
-export interface ISort<Row> {
-    key: keyof Row;
+export interface ISort {
+    key: string;
     ascending: boolean;
 }
-export interface ITableConfig<Key extends keyof Row, Row extends ObjectWithKey<Key, KeyType>, KeyType = Row[Key]> {
-    keyField: Key;
-    rows: Row[];
-    columns: Array<IColumn<Row>>;
-    selection?: Set<KeyType>;
-    sort?: ISort<Row>;
+export interface ITableConfig<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> {
+    keyField: K;
+    rows: R[];
+    columns: Array<IColumn<R>>;
+    selection?: Set<V>;
+    sort?: ISort;
 }
-export declare type RowEventListener<Row> = (newRows: Row[], oldRows: Row[]) => void;
-export declare type ColumnEventListener<Row> = (newColumns: Array<IColumn<Row>>, oldColumns: Array<IColumn<Row>>) => void;
-export declare type SelectionEventListener<KeyType> = (newSelection: Set<KeyType>, oldSelection: Set<KeyType>) => void;
-export declare type SortEventListener<Row> = (newSort: ISort<Row> | undefined, oldSort: ISort<Row> | undefined) => void;
-export interface ITableModel<Key extends keyof Row, Row extends ObjectWithKey<Key, KeyType>, KeyType = Row[Key]> {
-    readonly keyField: Key;
-    readonly columns: Array<IColumn<Row>>;
-    readonly selection: Set<KeyType>;
-    readonly sort: ISort<Row> | undefined;
-    readonly sortedRows: Row[];
-    setRows(newRows: Row[]): void;
-    setColumns(newColumns: Array<IColumn<Row>>): void;
-    setSelection(newSelection: Set<KeyType>): void;
-    setSort(newSort: ISort<Row> | undefined): void;
-    isSelected(row: Row): boolean;
-    addRowListener(listener: RowEventListener<Row>): void;
-    addColumnListener(listener: ColumnEventListener<Row>): void;
-    addSelectionListener(listener: SelectionEventListener<KeyType>): void;
-    addSortListener(listener: SortEventListener<Row>): void;
-    removeRowListener(listener: RowEventListener<Row>): void;
-    removeColumnListener(listener: ColumnEventListener<Row>): void;
-    removeSelectionListener(listener: SelectionEventListener<KeyType>): void;
-    removeSortListener(listener: SortEventListener<Row>): void;
+export declare type RowEventListener<R> = (newRows: R[], oldRows: R[]) => void;
+export declare type ColumnEventListener<R> = (newColumns: Array<IColumn<R>>, oldColumns: Array<IColumn<R>>) => void;
+export declare type SelectionEventListener<V> = (newSelection: Set<V>, oldSelection: Set<V>) => void;
+export declare type SortEventListener = (newSort: ISort | undefined, oldSort: ISort | undefined) => void;
+export interface ITableModel<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> {
+    readonly keyField: K;
+    readonly columns: Array<IColumn<R>>;
+    readonly selection: Set<V>;
+    readonly sort: ISort | undefined;
+    readonly sortedRows: R[];
+    setRows(newRows: R[]): void;
+    setColumns(newColumns: Array<IColumn<R>>): void;
+    setSelection(newSelection: Set<V>): void;
+    setSort(newSort: ISort | undefined): void;
+    isSelected(row: R): boolean;
+    addRowListener(listener: RowEventListener<R>): void;
+    addColumnListener(listener: ColumnEventListener<R>): void;
+    addSelectionListener(listener: SelectionEventListener<V>): void;
+    addSortListener(listener: SortEventListener): void;
+    removeRowListener(listener: RowEventListener<R>): void;
+    removeColumnListener(listener: ColumnEventListener<R>): void;
+    removeSelectionListener(listener: SelectionEventListener<V>): void;
+    removeSortListener(listener: SortEventListener): void;
     destroy(): void;
 }
 export declare type RowClickHandler = (event: MouseEvent, rowIndex: number) => void;
 export declare type HeaderClickHandler = (event: MouseEvent, headerIndex: number) => void;
-export interface IViewConfig<Key extends keyof Row, Row extends ObjectWithKey<Key, KeyType>, KeyType = Row[Key]> {
-    model: ITableModel<Key, Row, KeyType>;
+export interface IViewConfig<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> {
+    model: ITableModel<K, R, V>;
     onClickRow: RowClickHandler;
     onClickHeader: HeaderClickHandler;
 }
@@ -61,11 +63,11 @@ export interface ITableSectionView {
     destroy(): void;
 }
 export declare type SelectionMode = "none" | "single" | "multi";
-export declare type SelectionHandler<KeyType> = (newSelection: Set<KeyType>) => void;
+export declare type SelectionHandler<V> = (newSelection: Set<V>) => void;
 export interface ISelectionAdapter {
     handleRowClick: RowClickHandler;
 }
-export declare type SortHandler<Row> = (newSort: ISort<Row>) => void;
+export declare type SortHandler = (newSort: ISort) => void;
 export interface ISortAdapter {
     handleHeaderClick: HeaderClickHandler;
 }
