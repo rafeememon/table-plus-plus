@@ -1,13 +1,13 @@
 import { ISortAdapter, ITableModel, ObjectWithKey, SortHandler } from "./types";
 
 export class SortAdapter<
-    Key extends keyof Row,
-    Row extends ObjectWithKey<Key, KeyType>,
-    KeyType = Row[Key],
+    K extends keyof R,
+    R extends ObjectWithKey<K, V>,
+    V = R[K],
 > implements ISortAdapter {
 
     public constructor(
-        private model: ITableModel<Key, Row, KeyType>,
+        private model: ITableModel<K, R, V>,
         private handler: SortHandler,
     ) {}
 

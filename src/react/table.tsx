@@ -18,13 +18,13 @@ import {
 } from "..";
 
 function createSelectionAdapter<
-    Key extends keyof Row,
-    Row extends ObjectWithKey<Key, KeyType>,
-    KeyType = Row[Key],
+    K extends keyof R,
+    R extends ObjectWithKey<K, V>,
+    V = R[K],
 >(
     mode: SelectionMode | undefined,
-    model: ITableModel<Key, Row, KeyType>,
-    handler: SelectionHandler<KeyType>,
+    model: ITableModel<K, R, V>,
+    handler: SelectionHandler<V>,
 ) {
     switch (mode) {
         case "single":
@@ -37,32 +37,32 @@ function createSelectionAdapter<
 }
 
 export interface ITableProps<
-    Key extends keyof Row,
-    Row extends ObjectWithKey<Key, KeyType>,
-    KeyType = Row[Key],
+    K extends keyof R,
+    R extends ObjectWithKey<K, V>,
+    V = R[K],
 > {
-    keyField: Key;
-    rows: Row[];
-    columns: Array<IColumn<Row>>;
-    selection?: Set<KeyType>;
+    keyField: K;
+    rows: R[];
+    columns: Array<IColumn<R>>;
+    selection?: Set<V>;
     selectionMode?: SelectionMode;
     sort?: ISort;
     fixed?: boolean;
     className?: string;
-    onSelect?(newSelection: Set<KeyType>): void;
+    onSelect?(newSelection: Set<V>): void;
     onSort?(newSort: ISort): void;
 }
 
 export class Table<
-    Key extends keyof Row,
-    Row extends ObjectWithKey<Key, KeyType>,
-    KeyType = Row[Key],
-> extends React.PureComponent<ITableProps<Key, Row, KeyType>> {
+    K extends keyof R,
+    R extends ObjectWithKey<K, V>,
+    V = R[K],
+> extends React.PureComponent<ITableProps<K, R, V>> {
 
-    private model: ITableModel<Key, Row, KeyType>;
+    private model: ITableModel<K, R, V>;
     private view: ITableView;
 
-    public constructor(props: ITableProps<Key, Row, KeyType>, context?: any) {
+    public constructor(props: ITableProps<K, R, V>, context?: any) {
         super(props, context);
         this.model = new TableModel({
             keyField: props.keyField,
@@ -73,7 +73,7 @@ export class Table<
         });
         const selectionAdapter = createSelectionAdapter(props.selectionMode, this.model, this.handleSelect);
         const sortAdapter = new SortAdapter(this.model, this.handleSort);
-        const config: IViewConfig<Key, Row, KeyType> = {
+        const config: IViewConfig<K, R, V> = {
             model: this.model,
             onClickRow: selectionAdapter.handleRowClick,
             onClickHeader: sortAdapter.handleHeaderClick,
@@ -86,7 +86,7 @@ export class Table<
         this.view.destroy();
     }
 
-    public componentDidUpdate(oldProps: ITableProps<Key, Row, KeyType>) {
+    public componentDidUpdate(oldProps: ITableProps<K, R, V>) {
         const { keyField, rows, columns, selection, selectionMode, sort, fixed } = this.props;
         if (keyField !== oldProps.keyField) {
             throw new Error("changing key field not supported");
@@ -122,7 +122,7 @@ export class Table<
         }
     }
 
-    private handleSelect = (newSelection: Set<KeyType>) => {
+    private handleSelect = (newSelection: Set<V>) => {
         const { onSelect } = this.props;
         if (onSelect) {
             onSelect(newSelection);

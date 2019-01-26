@@ -33,9 +33,9 @@ const BODY_ELEMENT_STYLES: Partial<CSSStyleDeclaration> = {
 };
 
 export class FixedTableView<
-    Key extends keyof Row,
-    Row extends ObjectWithKey<Key, KeyType>,
-    KeyType = Row[Key],
+    K extends keyof R,
+    R extends ObjectWithKey<K, V>,
+    V = R[K],
 > implements ITableView {
 
     public element: HTMLElement;
@@ -46,7 +46,7 @@ export class FixedTableView<
     private bodyView: ITableSectionView;
     private domObserver: MutationObserver;
 
-    public constructor(config: IViewConfig<Key, Row, KeyType>) {
+    public constructor(config: IViewConfig<K, R, V>) {
         this.element = document.createElement("div");
         applyStyles(this.element, ELEMENT_STYLES);
 

@@ -13,16 +13,16 @@ function getClickedHeaderIndex(event: MouseEvent) {
 }
 
 export class TableHeaderView<
-    Key extends keyof Row,
-    Row extends ObjectWithKey<Key, KeyType>,
-    KeyType = Row[Key],
+    K extends keyof R,
+    R extends ObjectWithKey<K, V>,
+    V = R[K],
 > implements ITableSectionView {
 
     public element: HTMLTableSectionElement;
-    private thElements: Map<IColumn<Row>, HTMLTableHeaderCellElement> = new Map();
+    private thElements: Map<IColumn<R>, HTMLTableHeaderCellElement> = new Map();
 
     public constructor(
-        private model: ITableModel<Key, Row, KeyType>,
+        private model: ITableModel<K, R, V>,
         private clickHandler: HeaderClickHandler,
     ) {
         this.element = this.createTheadElement();
@@ -73,7 +73,7 @@ export class TableHeaderView<
     private createTheadElement() {
         const thead = document.createElement("thead");
         const tr = document.createElement("tr");
-        const newThElements = new Map<IColumn<Row>, HTMLTableHeaderCellElement>();
+        const newThElements = new Map<IColumn<R>, HTMLTableHeaderCellElement>();
 
         for (const column of this.model.columns) {
             const oldTh = this.thElements.get(column);
@@ -93,14 +93,14 @@ export class TableHeaderView<
         thead.removeEventListener("click", this.handleClick);
     }
 
-    private createThElement(column: IColumn<Row>) {
+    private createThElement(column: IColumn<R>) {
         const th = document.createElement("th");
         th.style.boxSizing = "border-box";
         th.appendChild(document.createTextNode(column.label));
         return th;
     }
 
-    private decorateThElement(column: IColumn<Row>, th = this.thElements.get(column)) {
+    private decorateThElement(column: IColumn<R>, th = this.thElements.get(column)) {
         if (!th) {
             return;
         }
