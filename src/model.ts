@@ -20,7 +20,15 @@ function removeFromArray<T>(elements: T[], element: T) {
 
 export function getSortableValue<Row>(row: Row, column: IColumn<Row>) {
     const { key, getSortValue, getSortableText } = column;
-    return getSortValue ? getSortValue(row) : getSortableText ? getSortableText(row) : row[key];
+    if (getSortValue) {
+        return getSortValue(row);
+    } else if (getSortableText) {
+        return getSortableText(row);
+    } else if (key in row) {
+        return row[key as keyof Row];
+    } else {
+        return null;
+    }
 }
 
 export class TableModel<
@@ -32,14 +40,14 @@ export class TableModel<
     public keyField: Key;
     public columns: Array<IColumn<Row>>;
     public selection: Set<KeyType>;
-    public sort: ISort<Row> | undefined;
+    public sort: ISort | undefined;
     public sortedRows: Row[];
 
     private rows: Row[];
     private rowListeners: Array<RowEventListener<Row>> = [];
     private columnListeners: Array<ColumnEventListener<Row>> = [];
     private selectionListeners: Array<SelectionEventListener<KeyType>> = [];
-    private sortListeners: Array<SortEventListener<Row>> = [];
+    private sortListeners: SortEventListener[] = [];
 
     public constructor(config: ITableConfig<Key, Row, KeyType>) {
         this.keyField = config.keyField;
@@ -85,7 +93,7 @@ export class TableModel<
         }
     }
 
-    public setSort(newSort: ISort<Row> | undefined) {
+    public setSort(newSort: ISort | undefined) {
         const oldSort = this.sort;
         this.sort = newSort;
 
@@ -116,7 +124,7 @@ export class TableModel<
         this.selectionListeners.push(listener);
     }
 
-    public addSortListener(listener: SortEventListener<Row>) {
+    public addSortListener(listener: SortEventListener) {
         this.sortListeners.push(listener);
     }
 
@@ -132,7 +140,7 @@ export class TableModel<
         removeFromArray(this.selectionListeners, listener);
     }
 
-    public removeSortListener(listener: SortEventListener<Row>) {
+    public removeSortListener(listener: SortEventListener) {
         removeFromArray(this.sortListeners, listener);
     }
 

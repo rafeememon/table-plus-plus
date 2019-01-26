@@ -7,17 +7,25 @@ import { FOURTEENERS, IMountain, MOUNTAIN_COLUMNS, ULTRAS } from "../__demo__/mo
 describe("getSortableValue", () => {
 
     test("returns the value directly by default", () => {
-        const text = getSortableValue({
+        const value = getSortableValue({
             field: "string",
         }, {
             key: "field",
             label: "field",
         });
-        expect(text).toEqual("string");
+        expect(value).toEqual("string");
+    });
+
+    test("returns null for a nonexistent value", () => {
+        const value = getSortableValue({}, {
+            key: "field",
+            label: "field",
+        });
+        expect(value).toEqual(null);
     });
 
     test("returns the value given by getSortValue", () => {
-        const text = getSortableValue({
+        const value = getSortableValue({
             field: "string",
         }, {
             key: "field",
@@ -29,11 +37,11 @@ describe("getSortableValue", () => {
                 return "returned by getSortableText";
             },
         });
-        expect(text).toEqual("returned by getSortValue");
+        expect(value).toEqual("returned by getSortValue");
     });
 
     test("returns the value given by getSortableText", () => {
-        const text = getSortableValue({
+        const value = getSortableValue({
             field: "string",
         }, {
             key: "field",
@@ -42,7 +50,7 @@ describe("getSortableValue", () => {
                 return "returned by getSortableText";
             },
         });
-        expect(text).toEqual("returned by getSortableText");
+        expect(value).toEqual("returned by getSortableText");
     });
 
 });
@@ -154,7 +162,7 @@ describe("Table model", () => {
 
     test("sort listener is called when sort is updated", () => {
         const oldSort = model.sort;
-        const newSort: ISort<IMountain> = {
+        const newSort: ISort = {
             key: "elevationFt",
             ascending: false,
         };

@@ -46,11 +46,11 @@ export interface ITableProps<
     columns: Array<IColumn<Row>>;
     selection?: Set<KeyType>;
     selectionMode?: SelectionMode;
-    sort?: ISort<Row>;
+    sort?: ISort;
     fixed?: boolean;
     className?: string;
     onSelect?(newSelection: Set<KeyType>): void;
-    onSort?(newSort: ISort<Row>): void;
+    onSort?(newSort: ISort): void;
 }
 
 export class Table<
@@ -129,7 +129,7 @@ export class Table<
         }
     }
 
-    private handleSort = (newSort: ISort<Row>) => {
+    private handleSort = (newSort: ISort) => {
         const { onSort } = this.props;
         if (onSort) {
             onSort(newSort);

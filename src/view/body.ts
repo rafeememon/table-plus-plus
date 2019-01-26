@@ -35,13 +35,16 @@ export function renderCellContent<Row>(row: Row, column: IColumn<Row>) {
 }
 
 export function getCellText<Row>(row: Row, column: IColumn<Row>): string {
-    if (column.getText) {
-        return column.getText(row);
-    } else if (column.getSortableText) {
-        return column.getSortableText(row);
-    } else {
-        const value = row[column.key];
+    const { key, getText, getSortableText } = column;
+    if (getText) {
+        return getText(row);
+    } else if (getSortableText) {
+        return getSortableText(row);
+    } else if (key in row) {
+        const value = row[key as keyof Row];
         return value != null ? String(value) : "";
+    } else {
+        return "";
     }
 }
 

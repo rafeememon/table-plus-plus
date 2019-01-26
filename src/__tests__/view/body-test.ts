@@ -136,6 +136,14 @@ describe("getCellText", () => {
         expect(text).toEqual("");
     });
 
+    test("returns an empty string for a nonexistent value", () => {
+        const text = getCellText({}, {
+            key: "field",
+            label: "field",
+        });
+        expect(text).toEqual("");
+    });
+
     test("returns the text given by getText", () => {
         const text = getCellText({
             field: "string",

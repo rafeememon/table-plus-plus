@@ -1,7 +1,7 @@
 export type ObjectWithKey<K extends string | number | symbol, V> = { [T in K]: V };
 
 export interface IColumn<Row> {
-    key: keyof Row;
+    key: string;
     label: string;
     // Used for displaying only; overrides getSortableText if both specified.
     getText?(row: Row): string;
@@ -15,8 +15,8 @@ export interface IColumn<Row> {
     onClick?(row: Row): void;
 }
 
-export interface ISort<Row> {
-    key: keyof Row;
+export interface ISort {
+    key: string;
     ascending: boolean;
 }
 
@@ -29,13 +29,13 @@ export interface ITableConfig<
     rows: Row[];
     columns: Array<IColumn<Row>>;
     selection?: Set<KeyType>;
-    sort?: ISort<Row>;
+    sort?: ISort;
 }
 
 export type RowEventListener<Row> = (newRows: Row[], oldRows: Row[]) => void;
 export type ColumnEventListener<Row> = (newColumns: Array<IColumn<Row>>, oldColumns: Array<IColumn<Row>>) => void;
 export type SelectionEventListener<KeyType> = (newSelection: Set<KeyType>, oldSelection: Set<KeyType>) => void;
-export type SortEventListener<Row> = (newSort: ISort<Row> | undefined, oldSort: ISort<Row> | undefined) => void;
+export type SortEventListener = (newSort: ISort | undefined, oldSort: ISort | undefined) => void;
 
 export interface ITableModel<
     Key extends keyof Row,
@@ -45,21 +45,21 @@ export interface ITableModel<
     readonly keyField: Key;
     readonly columns: Array<IColumn<Row>>;
     readonly selection: Set<KeyType>;
-    readonly sort: ISort<Row> | undefined;
+    readonly sort: ISort | undefined;
     readonly sortedRows: Row[];
     setRows(newRows: Row[]): void;
     setColumns(newColumns: Array<IColumn<Row>>): void;
     setSelection(newSelection: Set<KeyType>): void;
-    setSort(newSort: ISort<Row> | undefined): void;
+    setSort(newSort: ISort | undefined): void;
     isSelected(row: Row): boolean;
     addRowListener(listener: RowEventListener<Row>): void;
     addColumnListener(listener: ColumnEventListener<Row>): void;
     addSelectionListener(listener: SelectionEventListener<KeyType>): void;
-    addSortListener(listener: SortEventListener<Row>): void;
+    addSortListener(listener: SortEventListener): void;
     removeRowListener(listener: RowEventListener<Row>): void;
     removeColumnListener(listener: ColumnEventListener<Row>): void;
     removeSelectionListener(listener: SelectionEventListener<KeyType>): void;
-    removeSortListener(listener: SortEventListener<Row>): void;
+    removeSortListener(listener: SortEventListener): void;
     destroy(): void;
 }
 
@@ -95,7 +95,7 @@ export interface ISelectionAdapter {
     handleRowClick: RowClickHandler;
 }
 
-export type SortHandler<Row> = (newSort: ISort<Row>) => void;
+export type SortHandler = (newSort: ISort) => void;
 
 export interface ISortAdapter {
     handleHeaderClick: HeaderClickHandler;

@@ -8,7 +8,7 @@ export class SortAdapter<
 
     public constructor(
         private model: ITableModel<Key, Row, KeyType>,
-        private handler: SortHandler<Row>,
+        private handler: SortHandler,
     ) {}
 
     public handleHeaderClick = (_event: MouseEvent, headerIndex: number) => {

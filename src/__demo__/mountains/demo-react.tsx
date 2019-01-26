@@ -4,7 +4,6 @@ import { Table } from "../../react";
 import { ISort } from "../../types";
 import { MOUNTAIN_COLUMNS } from "./columns";
 import { FOURTEENERS, ULTRAS } from "./data";
-import { IMountain } from "./types";
 
 import "../styles.css";
 
@@ -13,7 +12,7 @@ type Toggle = "FOURTEENERS" | "ULTRAS";
 interface IState {
     toggle: Toggle;
     selection: Set<string>;
-    sort: ISort<IMountain> | undefined;
+    sort: ISort | undefined;
 }
 
 class Demo extends React.PureComponent<{}, IState> {
@@ -70,7 +69,7 @@ class Demo extends React.PureComponent<{}, IState> {
         this.setState({ selection });
     }
 
-    private handleSort = (sort: ISort<IMountain>) => {
+    private handleSort = (sort: ISort) => {
         this.setState({ sort });
     }
 

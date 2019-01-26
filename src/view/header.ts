@@ -40,8 +40,8 @@ export class TableHeaderView<
         this.rerender();
     }
 
-    private handleSortChanged = (newSort: ISort<Row> | undefined, oldSort: ISort<Row> | undefined) => {
-        const keys = new Set<keyof Row>();
+    private handleSortChanged = (newSort: ISort | undefined, oldSort: ISort | undefined) => {
+        const keys = new Set<string>();
         if (newSort) {
             keys.add(newSort.key);
         }
