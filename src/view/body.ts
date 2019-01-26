@@ -147,6 +147,7 @@ export class TableBodyView<
         for (const column of this.model.columns) {
             const td = document.createElement("td");
             td.style.boxSizing = "border-box";
+            td.setAttribute("data-column-key", column.key);
             td.appendChild(renderCellContent(row, column));
             tr.appendChild(td);
         }

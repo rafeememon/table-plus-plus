@@ -3,6 +3,10 @@ import { IGeoJsonFeatureProperties } from "./types";
 
 export const COLUMNS: Array<IColumn<IGeoJsonFeatureProperties>> = [
     {
+        key: "selected",
+        label: "",
+    },
+    {
         key: "time",
         label: "Time",
         getText({time}) {
