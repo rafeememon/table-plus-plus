@@ -80,7 +80,6 @@ describe("TableBodyView", () => {
         model.setColumns([
             {
                 key: "id",
-                label: "ID",
                 onClick({id}) {
                     clickedId = id;
                 },
@@ -121,7 +120,6 @@ describe("getCellText", () => {
             field: "string",
         }, {
             key: "field",
-            label: "field",
         });
         expect(text).toEqual("string");
     });
@@ -131,7 +129,6 @@ describe("getCellText", () => {
             field: null,
         }, {
             key: "field",
-            label: "field",
         });
         expect(text).toEqual("");
     });
@@ -139,7 +136,6 @@ describe("getCellText", () => {
     test("returns an empty string for a nonexistent value", () => {
         const text = getCellText({}, {
             key: "field",
-            label: "field",
         });
         expect(text).toEqual("");
     });
@@ -149,7 +145,6 @@ describe("getCellText", () => {
             field: "string",
         }, {
             key: "field",
-            label: "field",
             getText() {
                 return "returned by getText";
             },
@@ -165,7 +160,6 @@ describe("getCellText", () => {
             field: "string",
         }, {
             key: "field",
-            label: "field",
             getSortableText() {
                 return "returned by getSortableText";
             },
@@ -182,7 +176,6 @@ describe("renderCellContent", () => {
             field: "string",
         }, {
             key: "field",
-            label: "field",
         });
         expect(node).toEqual(document.createTextNode("string"));
     });
@@ -192,7 +185,6 @@ describe("renderCellContent", () => {
             field: "string",
         }, {
             key: "field",
-            label: "field",
             getHref() {
                 return "http://www.example.com";
             },

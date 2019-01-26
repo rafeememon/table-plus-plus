@@ -11,7 +11,6 @@ describe("getSortableValue", () => {
             field: "string",
         }, {
             key: "field",
-            label: "field",
         });
         expect(value).toEqual("string");
     });
@@ -19,7 +18,6 @@ describe("getSortableValue", () => {
     test("returns null for a nonexistent value", () => {
         const value = getSortableValue({}, {
             key: "field",
-            label: "field",
         });
         expect(value).toEqual(null);
     });
@@ -29,7 +27,6 @@ describe("getSortableValue", () => {
             field: "string",
         }, {
             key: "field",
-            label: "field",
             getSortValue() {
                 return "returned by getSortValue";
             },
@@ -45,7 +42,6 @@ describe("getSortableValue", () => {
             field: "string",
         }, {
             key: "field",
-            label: "field",
             getSortableText() {
                 return "returned by getSortableText";
             },

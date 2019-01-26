@@ -2,7 +2,7 @@ export type ObjectWithKey<K extends string | number | symbol, V> = { [T in K]: V
 
 export interface IColumn<R> {
     key: string;
-    label: string;
+    label?: string;
     // Used for displaying only; overrides getSortableText if both specified.
     getText?(row: R): string;
     // Used for sorting only; overrides getSortableText if both specified.

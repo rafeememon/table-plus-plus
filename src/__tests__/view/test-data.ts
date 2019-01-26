@@ -8,11 +8,13 @@ export interface ITestRow {
 export const TEST_COLUMNS: Array<IColumn<ITestRow>> = [
     { key: "id", label: "ID" },
     { key: "name", label: "Name" },
+    { key: "empty" },
 ];
 
 export const TEST_COLUMNS_2: Array<IColumn<ITestRow>> = [
     { key: "name", label: "Name 2" },
     { key: "id", label: "ID 2" },
+    { key: "empty" },
 ];
 
 export const TEST_ROWS: ITestRow[] = [
