@@ -27,7 +27,7 @@ export class SheetView<
     private bodyView: SheetBodyView<K, R, V>;
 
     public constructor(config: IViewConfig<K, R, V>) {
-        this.bodyView = new SheetBodyView(config.model);
+        this.bodyView = new SheetBodyView(config.model, config.onClickRow);
 
         this.element = document.createElement("div");
         applyStyles(this.element, ELEMENT_STYLES);

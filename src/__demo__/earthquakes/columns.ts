@@ -29,8 +29,5 @@ export const COLUMNS: Array<IColumn<IGeoJsonFeatureProperties>> = [
         getText() {
             return "Details";
         },
-        getHref({url}) {
-            return url;
-        },
     },
 ];

@@ -6,6 +6,7 @@
     "module": "commonjs",
     "noUnusedLocals": true,
     "outDir": "./dist",
+    "resolveJsonModule": true,
     "strict": true,
     "target": "es5"
   },

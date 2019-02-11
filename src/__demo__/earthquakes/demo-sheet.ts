@@ -1,6 +1,6 @@
 import { MultiSelectionAdapter, SheetView, SortAdapter, TableModel } from "../..";
 import { COLUMNS } from "./columns";
-import { fetchEarthquakesFromPastMonth } from "./data";
+import { fetchEarthquakes2 } from "./data";
 
 import "../styles-sheet.css";
 
@@ -30,7 +30,7 @@ container.classList.add("demo-sheet-container");
 
 const header = document.createElement("div");
 header.classList.add("demo-sheet-header");
-const headerText = document.createElement("h1");
+const headerText = document.createElement("h2");
 headerText.appendChild(document.createTextNode("All earthquakes in the past month"));
 header.appendChild(headerText);
 container.appendChild(header);
@@ -43,7 +43,7 @@ container.appendChild(content);
 document.body.appendChild(container);
 view.initialize();
 
-fetchEarthquakesFromPastMonth().then((response) => {
+fetchEarthquakes2().then((response) => {
     const features = response.features.map((f) => f.properties);
     model.setRows(features);
     setTimeout(() => model.setSort({key: "mag", ascending: false}), 2000);
