@@ -1,11 +1,8 @@
-import * as erdMaker from "element-resize-detector";
 import { ITableSectionView, ITableView, IViewConfig, ObjectWithKey } from "../types";
 import { TableBodyView } from "./body";
 import { applyStyles } from "./dom";
 import { TableHeaderView } from "./header";
 import { expandWidths } from "./math";
-
-const erd = erdMaker({ callOnAdd: false });
 
 const HEADER_ELEMENT_CLASSNAME = "tpp-fixed-table-header";
 const BODY_ELEMENT_CLASSNAME = "tpp-fixed-table-body";
@@ -71,7 +68,7 @@ export class FixedTableView<
         this.domObserver = new MutationObserver(this.handleMutation);
         this.domObserver.observe(this.element, { childList: true, subtree: true });
         this.bodyElement.addEventListener("scroll", this.updateScroll);
-        erd.listenTo(this.element, this.handleResize);
+        window.addEventListener("resize", this.handleResize);
 
         this.updateWidths();
         this.updateScroll();
@@ -88,7 +85,7 @@ export class FixedTableView<
         this.bodyView.destroy();
         this.domObserver.disconnect();
         this.bodyElement.removeEventListener("scroll", this.updateScroll);
-        erd.uninstall(this.element);
+        window.removeEventListener("resize", this.handleResize);
     }
 
     private handleMutation = () => {
