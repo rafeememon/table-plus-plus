@@ -1,11 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var erdMaker = require("element-resize-detector");
 var body_1 = require("./body");
 var dom_1 = require("./dom");
 var header_1 = require("./header");
 var math_1 = require("./math");
-var erd = erdMaker({ callOnAdd: false });
 var HEADER_ELEMENT_CLASSNAME = "tpp-fixed-table-header";
 var BODY_ELEMENT_CLASSNAME = "tpp-fixed-table-body";
 var ELEMENT_STYLES = {
@@ -61,7 +59,7 @@ var FixedTableView = /** @class */ (function () {
         this.domObserver = new MutationObserver(this.handleMutation);
         this.domObserver.observe(this.element, { childList: true, subtree: true });
         this.bodyElement.addEventListener("scroll", this.updateScroll);
-        erd.listenTo(this.element, this.handleResize);
+        window.addEventListener("resize", this.handleResize);
         this.updateWidths();
         this.updateScroll();
     }
@@ -75,7 +73,7 @@ var FixedTableView = /** @class */ (function () {
         this.bodyView.destroy();
         this.domObserver.disconnect();
         this.bodyElement.removeEventListener("scroll", this.updateScroll);
-        erd.uninstall(this.element);
+        window.removeEventListener("resize", this.handleResize);
     };
     FixedTableView.prototype.updateWidths = function () {
         var headerCells = this.headerView.element.querySelectorAll("tr:first-child th");

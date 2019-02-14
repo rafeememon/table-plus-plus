@@ -79,6 +79,7 @@ var TableHeaderView = /** @class */ (function () {
     TableHeaderView.prototype.createThElement = function (column) {
         var th = document.createElement("th");
         th.style.boxSizing = "border-box";
+        th.setAttribute("data-column-key", column.key);
         th.appendChild(document.createTextNode(column.label || ""));
         return th;
     };
