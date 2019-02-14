@@ -32,6 +32,16 @@ export function sortBy<T>(elements: T[], getSortValue: (element: T) => any, asce
     return elements.slice(0).sort((element1, element2) => {
         const value1 = sortValues.get(element1);
         const value2 = sortValues.get(element2);
-        return value1 === value2 ? 0 : value1 < value2 ? -ascendingFactor : ascendingFactor;
+        if (value1 == value2) { // tslint:disable-line:triple-equals
+            return 0;
+        } else if (value1 == null) {
+            return ascendingFactor;
+        } else if (value2 == null) {
+            return -ascendingFactor;
+        } else if (value1 < value2) {
+            return -ascendingFactor;
+        } else { // value1 > value2
+            return ascendingFactor;
+        }
     });
 }
