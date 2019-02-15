@@ -26,7 +26,8 @@ function getChildIndex(element) {
 }
 exports.getChildIndex = getChildIndex;
 function applyStyles(element, styles) {
-    for (var key in styles) { // tslint:disable-line:forin
+    for (var key in styles) {
+        // tslint:disable-line:forin
         var value = styles[key];
         if (value != null) {
             element.style[key] = value;

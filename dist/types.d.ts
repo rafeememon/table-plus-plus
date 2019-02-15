@@ -1,6 +1,3 @@
-export declare type ObjectWithKey<K extends string | number | symbol, V> = {
-    [T in K]: V;
-};
 export interface IColumn<R> {
     key: string;
     label?: string;
@@ -14,7 +11,7 @@ export interface ISort {
     key: string;
     ascending: boolean;
 }
-export interface ITableConfig<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> {
+export interface ITableConfig<K extends keyof R, R extends Record<K, V>, V = R[K]> {
     keyField: K;
     rows: R[];
     columns: Array<IColumn<R>>;
@@ -25,7 +22,7 @@ export declare type RowEventListener<R> = (newRows: R[], oldRows: R[]) => void;
 export declare type ColumnEventListener<R> = (newColumns: Array<IColumn<R>>, oldColumns: Array<IColumn<R>>) => void;
 export declare type SelectionEventListener<V> = (newSelection: Set<V>, oldSelection: Set<V>) => void;
 export declare type SortEventListener = (newSort: ISort | undefined, oldSort: ISort | undefined) => void;
-export interface ITableModel<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> {
+export interface ITableModel<K extends keyof R, R extends Record<K, V>, V = R[K]> {
     readonly keyField: K;
     readonly columns: Array<IColumn<R>>;
     readonly selection: Set<V>;
@@ -48,7 +45,7 @@ export interface ITableModel<K extends keyof R, R extends ObjectWithKey<K, V>, V
 }
 export declare type RowClickHandler = (event: MouseEvent, rowIndex: number) => void;
 export declare type HeaderClickHandler = (event: MouseEvent, headerIndex: number) => void;
-export interface IViewConfig<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> {
+export interface IViewConfig<K extends keyof R, R extends Record<K, V>, V = R[K]> {
     model: ITableModel<K, R, V>;
     onClickRow: RowClickHandler;
     onClickHeader: HeaderClickHandler;

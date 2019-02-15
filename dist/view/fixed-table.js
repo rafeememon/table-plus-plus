@@ -13,17 +13,17 @@ var ELEMENT_STYLES = {
     bottom: "0",
     left: "0",
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column"
 };
 var HEADER_ELEMENT_STYLES = {
     flexShrink: "0",
     overflowX: "hidden",
-    width: "100%",
+    width: "100%"
 };
 var BODY_ELEMENT_STYLES = {
     flexGrow: "1",
     overflowY: "auto",
-    width: "100%",
+    width: "100%"
 };
 var FixedTableView = /** @class */ (function () {
     function FixedTableView(config) {
@@ -104,7 +104,7 @@ var FixedTableView = /** @class */ (function () {
         if (element) {
             element.scrollIntoView({
                 block: "center",
-                inline: "start",
+                inline: "start"
             });
         }
     };

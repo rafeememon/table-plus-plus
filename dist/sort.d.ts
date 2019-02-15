@@ -1,5 +1,5 @@
-import { ISortAdapter, ITableModel, ObjectWithKey, SortHandler } from "./types";
-export declare class SortAdapter<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> implements ISortAdapter {
+import { ISortAdapter, ITableModel, SortHandler } from "./types";
+export declare class SortAdapter<K extends keyof R, R extends Record<K, V>, V = R[K]> implements ISortAdapter {
     private model;
     private handler;
     constructor(model: ITableModel<K, R, V>, handler: SortHandler);

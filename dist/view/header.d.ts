@@ -1,6 +1,6 @@
-import { HeaderClickHandler, ITableModel, ITableSectionView, ObjectWithKey } from "../types";
+import { HeaderClickHandler, ITableModel, ITableSectionView } from "../types";
 export declare const SORT_ARROW_CLASSNAME = "tpp-sort-arrow";
-export declare class TableHeaderView<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> implements ITableSectionView {
+export declare class TableHeaderView<K extends keyof R, R extends Record<K, V>, V = R[K]> implements ITableSectionView {
     private model;
     private clickHandler;
     element: HTMLTableSectionElement;

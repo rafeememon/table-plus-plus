@@ -55,14 +55,14 @@ var Table = /** @class */ (function (_super) {
             rows: props.rows,
             columns: props.columns,
             selection: props.selection,
-            sort: props.sort,
+            sort: props.sort
         });
         var selectionAdapter = createSelectionAdapter(props.selectionMode, _this.model, _this.handleSelect);
         var sortAdapter = new __1.SortAdapter(_this.model, _this.handleSort);
         var config = {
             model: _this.model,
             onClickRow: selectionAdapter.handleRowClick,
-            onClickHeader: sortAdapter.handleHeaderClick,
+            onClickHeader: sortAdapter.handleHeaderClick
         };
         _this.view = props.fixed ? new __1.FixedTableView(config) : new __1.TableView(config);
         return _this;

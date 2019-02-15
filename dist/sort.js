@@ -27,7 +27,23 @@ function sortBy(elements, getSortValue, ascending) {
     return elements.slice(0).sort(function (element1, element2) {
         var value1 = sortValues.get(element1);
         var value2 = sortValues.get(element2);
-        return value1 === value2 ? 0 : value1 < value2 ? -ascendingFactor : ascendingFactor;
+        // tslint:disable-next-line:triple-equals
+        if (value1 == value2) {
+            return 0;
+        }
+        else if (value1 == null) {
+            return ascendingFactor;
+        }
+        else if (value2 == null) {
+            return -ascendingFactor;
+        }
+        else if (value1 < value2) {
+            return -ascendingFactor;
+        }
+        else {
+            // value1 > value2
+            return ascendingFactor;
+        }
     });
 }
 exports.sortBy = sortBy;

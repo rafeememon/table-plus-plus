@@ -1,6 +1,6 @@
 import * as React from "react";
-import { IColumn, ISort, ObjectWithKey, SelectionMode } from "..";
-export interface ITableProps<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> {
+import { IColumn, ISort, SelectionMode } from "..";
+export interface ITableProps<K extends keyof R, R extends Record<K, V>, V = R[K]> {
     keyField: K;
     rows: R[];
     columns: Array<IColumn<R>>;
@@ -12,7 +12,7 @@ export interface ITableProps<K extends keyof R, R extends ObjectWithKey<K, V>, V
     onSelect?(newSelection: Set<V>): void;
     onSort?(newSort: ISort): void;
 }
-export declare class Table<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> extends React.PureComponent<ITableProps<K, R, V>> {
+export declare class Table<K extends keyof R, R extends Record<K, V>, V = R[K]> extends React.PureComponent<ITableProps<K, R, V>> {
     private model;
     private view;
     constructor(props: ITableProps<K, R, V>, context?: any);

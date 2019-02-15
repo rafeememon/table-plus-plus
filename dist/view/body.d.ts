@@ -1,7 +1,7 @@
-import { IColumn, ITableModel, ITableSectionView, ObjectWithKey, RowClickHandler } from "../types";
+import { IColumn, ITableModel, ITableSectionView, RowClickHandler } from "../types";
 export declare function renderCellContent<R>(row: R, column: IColumn<R>): Text | HTMLAnchorElement;
 export declare function getCellText<R>(row: R, column: IColumn<R>): string;
-export declare class TableBodyView<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> implements ITableSectionView {
+export declare class TableBodyView<K extends keyof R, R extends Record<K, V>, V = R[K]> implements ITableSectionView {
     private model;
     private clickHandler;
     element: HTMLTableSectionElement;

@@ -1,6 +1,6 @@
-import { ColumnEventListener, IColumn, ISort, ITableConfig, ITableModel, ObjectWithKey, RowEventListener, SelectionEventListener, SortEventListener } from "./types";
+import { ColumnEventListener, IColumn, ISort, ITableConfig, ITableModel, RowEventListener, SelectionEventListener, SortEventListener } from "./types";
 export declare function getSortableValue<R>(row: R, column: IColumn<R>): any;
-export declare class TableModel<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> implements ITableModel<K, R, V> {
+export declare class TableModel<K extends keyof R, R extends Record<K, V>, V = R[K]> implements ITableModel<K, R, V> {
     keyField: K;
     columns: Array<IColumn<R>>;
     selection: Set<V>;

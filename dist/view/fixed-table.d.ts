@@ -1,5 +1,5 @@
-import { ITableView, IViewConfig, ObjectWithKey } from "../types";
-export declare class FixedTableView<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> implements ITableView {
+import { ITableView, IViewConfig } from "../types";
+export declare class FixedTableView<K extends keyof R, R extends Record<K, V>, V = R[K]> implements ITableView {
     element: HTMLElement;
     private headerElement;
     private headerTable;
