@@ -6,7 +6,6 @@ import { createMouseEvent } from "../events";
 import { FOURTEENERS, IMountain, MOUNTAIN_COLUMNS } from "../../__demo__/mountains";
 
 describe("Single selection adapter", () => {
-
     let model: ITableModel<"name", IMountain>;
     let adapter: SingleSelectionAdapter<"name", IMountain>;
 
@@ -14,9 +13,9 @@ describe("Single selection adapter", () => {
         model = new TableModel({
             keyField: "name",
             rows: FOURTEENERS,
-            columns: MOUNTAIN_COLUMNS,
+            columns: MOUNTAIN_COLUMNS
         });
-        adapter = new SingleSelectionAdapter(model, (newSelection) => {
+        adapter = new SingleSelectionAdapter(model, newSelection => {
             model.setSelection(newSelection);
         });
     });
@@ -37,5 +36,4 @@ describe("Single selection adapter", () => {
         adapter.handleRowClick(createMouseEvent(), 0);
         expect(model.selection).toEqual(new Set([]));
     });
-
 });

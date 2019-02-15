@@ -12,19 +12,11 @@ function getClickedHeaderIndex(event: MouseEvent) {
     }
 }
 
-export class TableHeaderView<
-    K extends keyof R,
-    R extends ObjectWithKey<K, V>,
-    V = R[K],
-> implements ITableSectionView {
-
+export class TableHeaderView<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> implements ITableSectionView {
     public element: HTMLTableSectionElement;
     private thElements: Map<IColumn<R>, HTMLTableHeaderCellElement> = new Map();
 
-    public constructor(
-        private model: ITableModel<K, R, V>,
-        private clickHandler: HeaderClickHandler,
-    ) {
+    public constructor(private model: ITableModel<K, R, V>, private clickHandler: HeaderClickHandler) {
         this.element = this.createTheadElement();
         this.model.addColumnListener(this.handleColumnsChanged);
         this.model.addSortListener(this.handleSortChanged);
@@ -38,7 +30,7 @@ export class TableHeaderView<
 
     private handleColumnsChanged = () => {
         this.rerender();
-    }
+    };
 
     private handleSortChanged = (newSort: ISort | undefined, oldSort: ISort | undefined) => {
         const keys = new Set<string>();
@@ -48,20 +40,20 @@ export class TableHeaderView<
         if (oldSort) {
             keys.add(oldSort.key);
         }
-        keys.forEach((key) => {
-            const column = this.model.columns.find((c) => c.key === key);
+        keys.forEach(key => {
+            const column = this.model.columns.find(c => c.key === key);
             if (column) {
                 this.decorateThElement(column);
             }
         });
-    }
+    };
 
     private handleClick = (event: MouseEvent) => {
         const headerIndex = getClickedHeaderIndex(event);
         if (headerIndex != null) {
             this.clickHandler(event, headerIndex);
         }
-    }
+    };
 
     private rerender() {
         const newElement = this.createTheadElement();
@@ -77,7 +69,7 @@ export class TableHeaderView<
 
         for (const column of this.model.columns) {
             const oldTh = this.thElements.get(column);
-            const newTh = oldTh ? oldTh.cloneNode(true) as HTMLTableHeaderCellElement : this.createThElement(column);
+            const newTh = oldTh ? (oldTh.cloneNode(true) as HTMLTableHeaderCellElement) : this.createThElement(column);
             this.decorateThElement(column, newTh);
             tr.appendChild(newTh);
             newThElements.set(column, newTh);
@@ -125,5 +117,4 @@ export class TableHeaderView<
             th.appendChild(arrow);
         }
     }
-
 }

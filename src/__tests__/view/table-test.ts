@@ -4,7 +4,6 @@ import { getHeaderTh } from "./header-test";
 import { ITestRow, TEST_COLUMNS, TEST_COLUMNS_2, TEST_ROWS } from "./test-data";
 
 describe("TableView", () => {
-
     let model: ITableModel<"id", ITestRow, number>;
     let view: TableView<"id", ITestRow, number>;
     let clickedHeaderIndex: number | null = null;
@@ -14,7 +13,7 @@ describe("TableView", () => {
         model = new TableModel({
             keyField: "id",
             rows: TEST_ROWS,
-            columns: TEST_COLUMNS,
+            columns: TEST_COLUMNS
         });
         view = new TableView({
             model,
@@ -23,7 +22,7 @@ describe("TableView", () => {
             },
             onClickRow(_, index) {
                 clickedRowIndex = index;
-            },
+            }
         });
     });
 
@@ -56,5 +55,4 @@ describe("TableView", () => {
         expect(view.element.childNodes[0]).toBe(view.headerView.element);
         expect(view.element.childNodes[1]).toBe(view.bodyView.element);
     }
-
 });

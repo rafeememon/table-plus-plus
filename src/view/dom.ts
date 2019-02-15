@@ -24,7 +24,8 @@ export function getChildIndex(element: Node) {
 }
 
 export function applyStyles(element: HTMLElement, styles: Partial<CSSStyleDeclaration>) {
-    for (const key in styles) { // tslint:disable-line:forin
+    for (const key in styles) {
+        // tslint:disable-line:forin
         const value = styles[key];
         if (value != null) {
             element.style[key] = value;

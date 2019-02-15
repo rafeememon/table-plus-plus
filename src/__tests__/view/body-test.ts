@@ -15,7 +15,6 @@ function getBodyTr(view: ITableSectionView, rowIndex: number) {
 }
 
 describe("TableBodyView", () => {
-
     let model: ITableModel<"id", ITestRow, number>;
     let view: TableBodyView<"id", ITestRow, number>;
     let clickedIndex: number | null = null;
@@ -24,7 +23,7 @@ describe("TableBodyView", () => {
         model = new TableModel({
             keyField: "id",
             rows: TEST_ROWS,
-            columns: TEST_COLUMNS,
+            columns: TEST_COLUMNS
         });
         view = new TableBodyView(model, (_, index) => {
             clickedIndex = index;
@@ -80,10 +79,10 @@ describe("TableBodyView", () => {
         model.setColumns([
             {
                 key: "id",
-                onClick({id}) {
+                onClick({ id }) {
                     clickedId = id;
-                },
-            },
+                }
+            }
         ]);
         for (let index = 0; index < model.sortedRows.length; index++) {
             getBodyTd(view, index, 0).click();
@@ -110,89 +109,105 @@ describe("TableBodyView", () => {
             }
         }
     }
-
 });
 
 describe("getCellText", () => {
-
     test("returns the value directly by default", () => {
-        const text = getCellText({
-            field: "string",
-        }, {
-            key: "field",
-        });
+        const text = getCellText(
+            {
+                field: "string"
+            },
+            {
+                key: "field"
+            }
+        );
         expect(text).toEqual("string");
     });
 
     test("returns an empty string for null", () => {
-        const text = getCellText({
-            field: null,
-        }, {
-            key: "field",
-        });
+        const text = getCellText(
+            {
+                field: null
+            },
+            {
+                key: "field"
+            }
+        );
         expect(text).toEqual("");
     });
 
     test("returns an empty string for a nonexistent value", () => {
-        const text = getCellText({}, {
-            key: "field",
-        });
+        const text = getCellText(
+            {},
+            {
+                key: "field"
+            }
+        );
         expect(text).toEqual("");
     });
 
     test("returns the text given by getText", () => {
-        const text = getCellText({
-            field: "string",
-        }, {
-            key: "field",
-            getText() {
-                return "returned by getText";
+        const text = getCellText(
+            {
+                field: "string"
             },
-            getSortableText() {
-                return "returned by getSortableText";
-            },
-        });
+            {
+                key: "field",
+                getText() {
+                    return "returned by getText";
+                },
+                getSortableText() {
+                    return "returned by getSortableText";
+                }
+            }
+        );
         expect(text).toEqual("returned by getText");
     });
 
     test("returns the text given by getSortableText", () => {
-        const text = getCellText({
-            field: "string",
-        }, {
-            key: "field",
-            getSortableText() {
-                return "returned by getSortableText";
+        const text = getCellText(
+            {
+                field: "string"
             },
-        });
+            {
+                key: "field",
+                getSortableText() {
+                    return "returned by getSortableText";
+                }
+            }
+        );
         expect(text).toEqual("returned by getSortableText");
     });
-
 });
 
 describe("renderCellContent", () => {
-
     test("renders the value", () => {
-        const node = renderCellContent({
-            field: "string",
-        }, {
-            key: "field",
-        });
+        const node = renderCellContent(
+            {
+                field: "string"
+            },
+            {
+                key: "field"
+            }
+        );
         expect(node).toEqual(document.createTextNode("string"));
     });
 
     test("renders a link", () => {
-        const node = renderCellContent({
-            field: "string",
-        }, {
-            key: "field",
-            getHref() {
-                return "http://www.example.com";
+        const node = renderCellContent(
+            {
+                field: "string"
             },
-        });
+            {
+                key: "field",
+                getHref() {
+                    return "http://www.example.com";
+                }
+            }
+        );
         const expected = document.createElement("a");
         expected.href = "http://www.example.com";
         expected.appendChild(document.createTextNode("string"));
         expect(node).toEqual(expected);
     });
-
 });

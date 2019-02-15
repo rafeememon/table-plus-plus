@@ -5,34 +5,34 @@ export const MOUNTAIN_COLUMNS: Array<IColumn<IMountain>> = [
     {
         key: "name",
         label: "Name",
-        getSortValue({name}) {
+        getSortValue({ name }) {
             return name.startsWith("Mount ") ? name.substr(6) : name;
-        },
+        }
     },
     {
         key: "elevationFt",
         label: "Elevation",
-        getText({elevationFt}) {
+        getText({ elevationFt }) {
             return formatFeet(elevationFt);
-        },
+        }
     },
     {
         key: "prominenceFt",
         label: "Prominence",
-        getText({prominenceFt}) {
+        getText({ prominenceFt }) {
             return formatFeet(prominenceFt);
-        },
+        }
     },
     {
         key: "climbed",
         label: "Climbed",
-        getText({climbed}) {
+        getText({ climbed }) {
             return climbed ? "Yes" : "No";
         },
-        getSortValue({climbed}) {
+        getSortValue({ climbed }) {
             return climbed ? 0 : 1;
-        },
-    },
+        }
+    }
 ];
 
 function formatFeet(value: number) {

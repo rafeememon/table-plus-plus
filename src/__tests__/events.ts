@@ -11,6 +11,6 @@ export function createMouseEvent(modifier?: "SHIFT" | "CONTROL" | "META") {
                 default:
                     return false;
             }
-        },
+        }
     } as MouseEvent;
 }

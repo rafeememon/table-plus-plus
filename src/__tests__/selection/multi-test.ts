@@ -6,12 +6,11 @@ import { createMouseEvent } from "../events";
 import { FOURTEENERS, IMountain, MOUNTAIN_COLUMNS } from "../../__demo__/mountains";
 
 describe("Multi selection adapter", () => {
-
     let model: ITableModel<"name", IMountain>;
     let adapter: MultiSelectionAdapter<"name", IMountain>;
 
     function getKeys(start: number, end = start) {
-        return new Set(model.sortedRows.slice(start, end + 1).map((m) => m.name));
+        return new Set(model.sortedRows.slice(start, end + 1).map(m => m.name));
     }
 
     beforeEach(() => {
@@ -21,10 +20,10 @@ describe("Multi selection adapter", () => {
             columns: MOUNTAIN_COLUMNS,
             sort: {
                 key: "name",
-                ascending: true,
-            },
+                ascending: true
+            }
         });
-        adapter = new MultiSelectionAdapter(model, (newSelection) => {
+        adapter = new MultiSelectionAdapter(model, newSelection => {
             model.setSelection(newSelection);
         });
     });
@@ -117,5 +116,4 @@ describe("Multi selection adapter", () => {
         adapter.handleRowClick(createMouseEvent("META"), 0);
         expect(model.selection).toEqual(getKeys(1));
     });
-
 });

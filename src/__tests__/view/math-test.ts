@@ -1,15 +1,12 @@
 import { expandWidths, sum, union } from "../../view/math";
 
 describe("sum", () => {
-
     test("sums the numbers", () => {
         expect(sum([1, 2, 3])).toEqual(6);
     });
-
 });
 
 describe("expandWidths", () => {
-
     test("doesn't change the widths if they fill the container", () => {
         expect(expandWidths([1, 2, 3], 5)).toEqual([1, 2, 3]);
         expect(expandWidths([1, 2, 3], 6)).toEqual([1, 2, 3]);
@@ -32,16 +29,13 @@ describe("expandWidths", () => {
             expect(result[index]).toBeGreaterThanOrEqual(widths[index]);
         }
     });
-
 });
 
 describe("union", () => {
-
     test("unions the sets", () => {
         const set1 = new Set([1, 2]);
         const set2 = new Set([2, 3]);
         const expected = new Set([1, 2, 3]);
         expect(union(set1, set2)).toEqual(expected);
     });
-
 });

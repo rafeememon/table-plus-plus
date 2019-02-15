@@ -15,16 +15,15 @@ interface IState {
 }
 
 class Demo extends React.PureComponent<{}, IState> {
-
     public state: IState = {
         rows: [],
         selection: new Set(),
-        sort: undefined,
+        sort: undefined
     };
 
     public componentDidMount() {
-        fetchEarthquakes().then((response) => {
-            const rows = response.features.map((feature) => feature.properties);
+        fetchEarthquakes().then(response => {
+            const rows = response.features.map(feature => feature.properties);
             this.setState({ rows });
         });
     }
@@ -49,12 +48,11 @@ class Demo extends React.PureComponent<{}, IState> {
 
     private handleSelect = (selection: Set<string>) => {
         this.setState({ selection });
-    }
+    };
 
     private handleSort = (sort: ISort) => {
         this.setState({ sort });
-    }
-
+    };
 }
 
 const fixture = document.createElement("div");

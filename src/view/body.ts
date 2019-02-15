@@ -48,19 +48,11 @@ export function getCellText<R>(row: R, column: IColumn<R>): string {
     }
 }
 
-export class TableBodyView<
-    K extends keyof R,
-    R extends ObjectWithKey<K, V>,
-    V = R[K],
-> implements ITableSectionView {
-
+export class TableBodyView<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> implements ITableSectionView {
     public element: HTMLTableSectionElement;
     private trElements: Map<R, HTMLTableRowElement> = new Map();
 
-    public constructor(
-        private model: ITableModel<K, R, V>,
-        private clickHandler: RowClickHandler,
-    ) {
+    public constructor(private model: ITableModel<K, R, V>, private clickHandler: RowClickHandler) {
         this.element = this.createTbodyElement();
         this.model.addRowListener(this.handleRowsChanged);
         this.model.addColumnListener(this.handleColumnsChanged);
@@ -78,12 +70,12 @@ export class TableBodyView<
 
     private handleRowsChanged = () => {
         this.rerender();
-    }
+    };
 
     private handleColumnsChanged = () => {
         this.trElements.clear();
         this.rerender();
-    }
+    };
 
     private handleSelectionChanged = (newSelection: Set<V>, oldSelection: Set<V>) => {
         const { keyField, sortedRows } = this.model;
@@ -93,11 +85,11 @@ export class TableBodyView<
                 this.decorateTrElement(row);
             }
         }
-    }
+    };
 
     private handleSortChanged = () => {
         this.rerender();
-    }
+    };
 
     private handleClick = (event: MouseEvent) => {
         const rowIndex = getClickedRowIndex(event);
@@ -112,7 +104,7 @@ export class TableBodyView<
         } else {
             this.clickHandler(event, rowIndex);
         }
-    }
+    };
 
     private rerender() {
         const newElement = this.createTbodyElement();
@@ -127,7 +119,7 @@ export class TableBodyView<
 
         for (const row of this.model.sortedRows) {
             const oldTr = this.trElements.get(row);
-            const newTr = oldTr ? oldTr.cloneNode(true) as HTMLTableRowElement : this.createTrElement(row);
+            const newTr = oldTr ? (oldTr.cloneNode(true) as HTMLTableRowElement) : this.createTrElement(row);
             this.decorateTrElement(row, newTr);
             tbody.appendChild(newTr);
             newTrElements.set(row, newTr);
@@ -165,5 +157,4 @@ export class TableBodyView<
             tr.removeAttribute(SELECTED_ATTRIBUTE);
         }
     }
-
 }
