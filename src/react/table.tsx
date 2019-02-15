@@ -8,7 +8,6 @@ import {
     IViewConfig,
     MultiSelectionAdapter,
     NOOP_SELECTION_ADAPTER,
-    ObjectWithKey,
     SelectionHandler,
     SelectionMode,
     SingleSelectionAdapter,
@@ -17,7 +16,7 @@ import {
     TableView
 } from "..";
 
-function createSelectionAdapter<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]>(
+function createSelectionAdapter<K extends keyof R, R extends Record<K, V>, V = R[K]>(
     mode: SelectionMode | undefined,
     model: ITableModel<K, R, V>,
     handler: SelectionHandler<V>
@@ -32,7 +31,7 @@ function createSelectionAdapter<K extends keyof R, R extends ObjectWithKey<K, V>
     }
 }
 
-export interface ITableProps<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> {
+export interface ITableProps<K extends keyof R, R extends Record<K, V>, V = R[K]> {
     keyField: K;
     rows: R[];
     columns: Array<IColumn<R>>;
@@ -45,7 +44,7 @@ export interface ITableProps<K extends keyof R, R extends ObjectWithKey<K, V>, V
     onSort?(newSort: ISort): void;
 }
 
-export class Table<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> extends React.PureComponent<
+export class Table<K extends keyof R, R extends Record<K, V>, V = R[K]> extends React.PureComponent<
     ITableProps<K, R, V>
 > {
     private model: ITableModel<K, R, V>;

@@ -1,8 +1,8 @@
-import { ITableSectionView, ITableView, IViewConfig, ObjectWithKey } from "../types";
+import { ITableSectionView, ITableView, IViewConfig } from "../types";
 import { TableBodyView } from "./body";
 import { TableHeaderView } from "./header";
 
-export class TableView<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> implements ITableView {
+export class TableView<K extends keyof R, R extends Record<K, V>, V = R[K]> implements ITableView {
     public element: HTMLTableElement;
     public headerView: ITableSectionView;
     public bodyView: ITableSectionView;
