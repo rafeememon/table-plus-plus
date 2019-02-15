@@ -42,7 +42,7 @@ describe("Sort adapter", () => {
 
 describe("sortBy", () => {
 
-    function getSortValue(element: string) {
+    function sortByLength(element: string) {
         return element.length;
     }
 
@@ -50,15 +50,21 @@ describe("sortBy", () => {
     const ELEMENTS_SORTED = ["c", "bb", "aaa"];
 
     test("sorts ascending", () => {
-        const result = sortBy(ELEMENTS_UNSORTED, getSortValue, true);
+        const result = sortBy(ELEMENTS_UNSORTED, sortByLength, true);
         expect(result).toEqual(ELEMENTS_SORTED);
         expect(result).not.toBe(ELEMENTS_UNSORTED);
     });
 
     test("sorts descending", () => {
-        const result = sortBy(ELEMENTS_UNSORTED, getSortValue, false);
+        const result = sortBy(ELEMENTS_UNSORTED, sortByLength, false);
         expect(result).toEqual(ELEMENTS_SORTED.slice().reverse());
         expect(result).not.toBe(ELEMENTS_UNSORTED);
+    });
+
+    test("sorts nulls to the end", () => {
+        expect(sortBy([null, "a", "b"], (e) => e, true)).toEqual(["a", "b", null]);
+        expect(sortBy(["a", null, "b"], (e) => e, true)).toEqual(["a", "b", null]);
+        expect(sortBy(["a", "b", null], (e) => e, true)).toEqual(["a", "b", null]);
     });
 
 });
