@@ -9,7 +9,6 @@ function createSpan() {
 }
 
 describe("replaceWith", () => {
-
     test("replaces the child node", () => {
         const parent = createDiv();
         const child1 = createDiv();
@@ -25,11 +24,9 @@ describe("replaceWith", () => {
         const child2 = createDiv();
         replaceWith(child1, child2);
     });
-
 });
 
 describe("findParentElementOfType", () => {
-
     test("returns the element if it is the correct type", () => {
         const parent = createDiv();
         const child = createDiv();
@@ -50,11 +47,9 @@ describe("findParentElementOfType", () => {
         parent.appendChild(child);
         expect(findParentElementOfType(child, "SPAN")).toBeNull();
     });
-
 });
 
 describe("getChildIndex", () => {
-
     test("returns 0 for a root node", () => {
         const node = createDiv();
         expect(getChildIndex(node)).toBe(0);
@@ -72,21 +67,19 @@ describe("getChildIndex", () => {
         expect(getChildIndex(child2)).toBe(1);
         expect(getChildIndex(child3)).toBe(2);
     });
-
 });
 
 describe("applyStyles", () => {
-
     test("applys styles", () => {
         const styles: Partial<CSSStyleDeclaration> = {
             backgroundColor: "blue",
-            color: "red",
+            color: "red"
         };
         const div = createDiv();
         applyStyles(div, styles);
-        for (const key in styles) { // tslint:disable-line:forin
+        for (const key in styles) {
+            // tslint:disable-line:forin
             expect(div.style[key]).toEqual(styles[key]);
         }
     });
-
 });

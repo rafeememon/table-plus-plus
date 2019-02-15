@@ -16,11 +16,10 @@ interface IState {
 }
 
 class Demo extends React.PureComponent<{}, IState> {
-
     public state: IState = {
         toggle: "FOURTEENERS",
         selection: new Set(),
-        sort: undefined,
+        sort: undefined
     };
 
     public render() {
@@ -63,16 +62,15 @@ class Demo extends React.PureComponent<{}, IState> {
     private handleClickToggle = (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
         this.setState({ toggle: this.state.toggle === "FOURTEENERS" ? "ULTRAS" : "FOURTEENERS" });
-    }
+    };
 
     private handleSelect = (selection: Set<string>) => {
         this.setState({ selection });
-    }
+    };
 
     private handleSort = (sort: ISort) => {
         this.setState({ sort });
-    }
-
+    };
 }
 
 const fixture = document.createElement("div");

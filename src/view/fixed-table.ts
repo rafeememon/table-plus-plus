@@ -14,27 +14,22 @@ const ELEMENT_STYLES: Partial<CSSStyleDeclaration> = {
     bottom: "0",
     left: "0",
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column"
 };
 
 const HEADER_ELEMENT_STYLES: Partial<CSSStyleDeclaration> = {
     flexShrink: "0",
     overflowX: "hidden",
-    width: "100%",
+    width: "100%"
 };
 
 const BODY_ELEMENT_STYLES: Partial<CSSStyleDeclaration> = {
     flexGrow: "1",
     overflowY: "auto",
-    width: "100%",
+    width: "100%"
 };
 
-export class FixedTableView<
-    K extends keyof R,
-    R extends ObjectWithKey<K, V>,
-    V = R[K],
-> implements ITableView {
-
+export class FixedTableView<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> implements ITableView {
     public element: HTMLElement;
     private headerElement: HTMLElement;
     private headerTable: HTMLElement;
@@ -91,17 +86,19 @@ export class FixedTableView<
     private handleMutation = () => {
         this.updateWidths();
         this.updateScroll();
-    }
+    };
 
     private handleResize = () => {
         this.updateWidths();
-    }
+    };
 
     private updateWidths() {
-        const headerCells = this.headerView.element.querySelectorAll("tr:first-child th") as
-            NodeListOf<HTMLTableHeaderCellElement>;
-        const bodyCells = this.bodyView.element.querySelectorAll("tr:first-child td") as
-            NodeListOf<HTMLTableCellElement>;
+        const headerCells = this.headerView.element.querySelectorAll("tr:first-child th") as NodeListOf<
+            HTMLTableHeaderCellElement
+        >;
+        const bodyCells = this.bodyView.element.querySelectorAll("tr:first-child td") as NodeListOf<
+            HTMLTableCellElement
+        >;
         const numCells = Math.min(headerCells.length, bodyCells.length);
         const widths = [];
 
@@ -131,16 +128,15 @@ export class FixedTableView<
 
     private updateScroll = () => {
         this.headerElement.scrollLeft = this.bodyElement.scrollLeft;
-    }
+    };
 
     private scrollSelectedIntoView() {
         const element = this.bodyView.element.querySelector("tr[data-selected]");
         if (element) {
             element.scrollIntoView({
                 block: "center",
-                inline: "start",
+                inline: "start"
             });
         }
     }
-
 }

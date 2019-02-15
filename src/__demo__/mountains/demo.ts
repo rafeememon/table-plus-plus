@@ -9,27 +9,27 @@ const model = new TableModel({
     keyField: "name",
     rows: FOURTEENERS,
     columns: MOUNTAIN_COLUMNS,
-    selection: new Set<string>(),
+    selection: new Set<string>()
 });
 
-const selectionAdapter = new MultiSelectionAdapter(model, (newSelection) => {
+const selectionAdapter = new MultiSelectionAdapter(model, newSelection => {
     model.setSelection(newSelection);
 });
 
-const sortAdapter = new SortAdapter(model, (newSort) => {
+const sortAdapter = new SortAdapter(model, newSort => {
     model.setSort(newSort);
 });
 
 const view = new TableView({
     model,
     onClickRow: selectionAdapter.handleRowClick,
-    onClickHeader: sortAdapter.handleHeaderClick,
+    onClickHeader: sortAdapter.handleHeaderClick
 });
 
 function createToggle(text: string, mountains: IMountain[]) {
     const link = document.createElement("a");
     link.href = "#";
-    link.addEventListener("click", (event) => {
+    link.addEventListener("click", event => {
         event.preventDefault();
         model.setRows(mountains);
     });

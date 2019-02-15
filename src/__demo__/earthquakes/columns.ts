@@ -3,25 +3,25 @@ import { IGeoJsonFeatureProperties } from "./types";
 
 export const COLUMNS: Array<IColumn<IGeoJsonFeatureProperties>> = [
     {
-        key: "selected",
+        key: "selected"
     },
     {
         key: "time",
         label: "Time",
-        getText({time}) {
+        getText({ time }) {
             return new Date(time).toLocaleString();
-        },
+        }
     },
     {
         key: "mag",
         label: "Magnitude",
-        getText({mag}) {
+        getText({ mag }) {
             return mag.toFixed(1);
-        },
+        }
     },
     {
         key: "place",
-        label: "Location",
+        label: "Location"
     },
     {
         key: "url",
@@ -29,8 +29,8 @@ export const COLUMNS: Array<IColumn<IGeoJsonFeatureProperties>> = [
         getText() {
             return "Details";
         },
-        getHref({url}) {
+        getHref({ url }) {
             return url;
-        },
-    },
+        }
+    }
 ];

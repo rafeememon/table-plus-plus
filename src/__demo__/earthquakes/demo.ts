@@ -8,21 +8,21 @@ const model = new TableModel({
     keyField: "code",
     rows: [],
     columns: COLUMNS,
-    selection: new Set<string>(),
+    selection: new Set<string>()
 });
 
-const selectionAdapter = new MultiSelectionAdapter(model, (newSelection) => {
+const selectionAdapter = new MultiSelectionAdapter(model, newSelection => {
     model.setSelection(newSelection);
 });
 
-const sortAdapter = new SortAdapter(model, (newSort) => {
+const sortAdapter = new SortAdapter(model, newSort => {
     model.setSort(newSort);
 });
 
 const view = new TableView({
     model,
     onClickRow: selectionAdapter.handleRowClick,
-    onClickHeader: sortAdapter.handleHeaderClick,
+    onClickHeader: sortAdapter.handleHeaderClick
 });
 
 const header = document.createElement("h1");
@@ -31,7 +31,7 @@ document.body.appendChild(header);
 document.body.appendChild(view.element);
 view.initialize();
 
-fetchEarthquakes().then((response) => {
-    const features = response.features.map((f) => f.properties);
+fetchEarthquakes().then(response => {
+    const features = response.features.map(f => f.properties);
     model.setRows(features);
 });

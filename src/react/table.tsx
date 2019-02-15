@@ -14,17 +14,13 @@ import {
     SingleSelectionAdapter,
     SortAdapter,
     TableModel,
-    TableView,
+    TableView
 } from "..";
 
-function createSelectionAdapter<
-    K extends keyof R,
-    R extends ObjectWithKey<K, V>,
-    V = R[K],
->(
+function createSelectionAdapter<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]>(
     mode: SelectionMode | undefined,
     model: ITableModel<K, R, V>,
-    handler: SelectionHandler<V>,
+    handler: SelectionHandler<V>
 ) {
     switch (mode) {
         case "single":
@@ -36,11 +32,7 @@ function createSelectionAdapter<
     }
 }
 
-export interface ITableProps<
-    K extends keyof R,
-    R extends ObjectWithKey<K, V>,
-    V = R[K],
-> {
+export interface ITableProps<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> {
     keyField: K;
     rows: R[];
     columns: Array<IColumn<R>>;
@@ -53,12 +45,9 @@ export interface ITableProps<
     onSort?(newSort: ISort): void;
 }
 
-export class Table<
-    K extends keyof R,
-    R extends ObjectWithKey<K, V>,
-    V = R[K],
-> extends React.PureComponent<ITableProps<K, R, V>> {
-
+export class Table<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> extends React.PureComponent<
+    ITableProps<K, R, V>
+> {
     private model: ITableModel<K, R, V>;
     private view: ITableView;
 
@@ -69,14 +58,14 @@ export class Table<
             rows: props.rows,
             columns: props.columns,
             selection: props.selection,
-            sort: props.sort,
+            sort: props.sort
         });
         const selectionAdapter = createSelectionAdapter(props.selectionMode, this.model, this.handleSelect);
         const sortAdapter = new SortAdapter(this.model, this.handleSort);
         const config: IViewConfig<K, R, V> = {
             model: this.model,
             onClickRow: selectionAdapter.handleRowClick,
-            onClickHeader: sortAdapter.handleHeaderClick,
+            onClickHeader: sortAdapter.handleHeaderClick
         };
         this.view = props.fixed ? new FixedTableView(config) : new TableView(config);
     }
@@ -120,14 +109,14 @@ export class Table<
             element.appendChild(this.view.element);
             this.view.initialize();
         }
-    }
+    };
 
     private handleSelect = (newSelection: Set<V>) => {
         const { onSelect } = this.props;
         if (onSelect) {
             onSelect(newSelection);
         }
-    }
+    };
 
     private handleSort = (newSort: ISort) => {
         const { onSort } = this.props;
@@ -136,6 +125,5 @@ export class Table<
         } else if (!("sort" in this.props)) {
             this.model.setSort(newSort);
         }
-    }
-
+    };
 }

@@ -5,54 +5,63 @@ import { IColumn, ISort, ITableModel } from "../types";
 import { FOURTEENERS, IMountain, MOUNTAIN_COLUMNS, ULTRAS } from "../__demo__/mountains";
 
 describe("getSortableValue", () => {
-
     test("returns the value directly by default", () => {
-        const value = getSortableValue({
-            field: "string",
-        }, {
-            key: "field",
-        });
+        const value = getSortableValue(
+            {
+                field: "string"
+            },
+            {
+                key: "field"
+            }
+        );
         expect(value).toEqual("string");
     });
 
     test("returns null for a nonexistent value", () => {
-        const value = getSortableValue({}, {
-            key: "field",
-        });
+        const value = getSortableValue(
+            {},
+            {
+                key: "field"
+            }
+        );
         expect(value).toEqual(null);
     });
 
     test("returns the value given by getSortValue", () => {
-        const value = getSortableValue({
-            field: "string",
-        }, {
-            key: "field",
-            getSortValue() {
-                return "returned by getSortValue";
+        const value = getSortableValue(
+            {
+                field: "string"
             },
-            getSortableText() {
-                return "returned by getSortableText";
-            },
-        });
+            {
+                key: "field",
+                getSortValue() {
+                    return "returned by getSortValue";
+                },
+                getSortableText() {
+                    return "returned by getSortableText";
+                }
+            }
+        );
         expect(value).toEqual("returned by getSortValue");
     });
 
     test("returns the value given by getSortableText", () => {
-        const value = getSortableValue({
-            field: "string",
-        }, {
-            key: "field",
-            getSortableText() {
-                return "returned by getSortableText";
+        const value = getSortableValue(
+            {
+                field: "string"
             },
-        });
+            {
+                key: "field",
+                getSortableText() {
+                    return "returned by getSortableText";
+                }
+            }
+        );
         expect(value).toEqual("returned by getSortableText");
     });
-
 });
 
 describe("Table model", () => {
-
     let model: ITableModel<"name", IMountain>;
 
     beforeEach(() => {
@@ -63,41 +72,41 @@ describe("Table model", () => {
             selection: new Set(),
             sort: {
                 key: "prominenceFt",
-                ascending: true,
-            },
+                ascending: true
+            }
         });
     });
 
     test("sorted rows are initialized", () => {
-        const expectedRows = sortBy(FOURTEENERS, (m) => m.prominenceFt, true);
+        const expectedRows = sortBy(FOURTEENERS, m => m.prominenceFt, true);
         expect(model.sortedRows).toEqual(expectedRows);
     });
 
     test("sorted rows are updated when rows change", () => {
         model.setRows(ULTRAS);
-        const expectedRows = sortBy(ULTRAS, (m) => m.prominenceFt, true);
+        const expectedRows = sortBy(ULTRAS, m => m.prominenceFt, true);
         expect(model.sortedRows).toEqual(expectedRows);
     });
 
     test("sorted rows are updated when sort changes", () => {
         model.setSort({
             key: "elevationFt",
-            ascending: false,
+            ascending: false
         });
-        const expectedRows = sortBy(FOURTEENERS, (m) => m.elevationFt, false);
+        const expectedRows = sortBy(FOURTEENERS, m => m.elevationFt, false);
         expect(model.sortedRows).toEqual(expectedRows);
     });
 
     test("sorted rows are updated when columns change", () => {
-        function getSortValue({prominenceFt}: IMountain) {
+        function getSortValue({ prominenceFt }: IMountain) {
             return -prominenceFt;
         }
         model.setColumns([
             {
                 key: "prominenceFt",
                 label: "Prominence",
-                getSortValue,
-            },
+                getSortValue
+            }
         ]);
         const expectedRows = sortBy(FOURTEENERS, getSortValue, true);
         expect(model.sortedRows).toEqual(expectedRows);
@@ -132,8 +141,8 @@ describe("Table model", () => {
         const newColumns: Array<IColumn<IMountain>> = [
             {
                 key: "prominenceFt",
-                label: "Prominence",
-            },
+                label: "Prominence"
+            }
         ];
         const listener = jest.fn();
         model.addColumnListener(listener);
@@ -160,7 +169,7 @@ describe("Table model", () => {
         const oldSort = model.sort;
         const newSort: ISort = {
             key: "elevationFt",
-            ascending: false,
+            ascending: false
         };
         const listener = jest.fn();
         model.addSortListener(listener);
@@ -193,5 +202,4 @@ describe("Table model", () => {
         expect(selectionListener).not.toHaveBeenCalled();
         expect(sortListener).not.toHaveBeenCalled();
     });
-
 });

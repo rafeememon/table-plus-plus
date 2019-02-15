@@ -11,7 +11,6 @@ export function getHeaderTh(view: ITableSectionView, index: number) {
 }
 
 describe("TableHeaderView", () => {
-
     let model: ITableModel<"id", ITestRow, number>;
     let view: TableHeaderView<"id", ITestRow, number>;
     let clickedIndex: number | null = null;
@@ -20,7 +19,7 @@ describe("TableHeaderView", () => {
         model = new TableModel({
             keyField: "id",
             rows: TEST_ROWS,
-            columns: TEST_COLUMNS,
+            columns: TEST_COLUMNS
         });
         view = new TableHeaderView(model, (_, index) => {
             clickedIndex = index;
@@ -81,5 +80,4 @@ describe("TableHeaderView", () => {
             }
         }
     }
-
 });

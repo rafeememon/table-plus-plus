@@ -20,11 +20,7 @@ export interface ISort {
     ascending: boolean;
 }
 
-export interface ITableConfig<
-    K extends keyof R,
-    R extends ObjectWithKey<K, V>,
-    V = R[K],
-> {
+export interface ITableConfig<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> {
     keyField: K;
     rows: R[];
     columns: Array<IColumn<R>>;
@@ -37,11 +33,7 @@ export type ColumnEventListener<R> = (newColumns: Array<IColumn<R>>, oldColumns:
 export type SelectionEventListener<V> = (newSelection: Set<V>, oldSelection: Set<V>) => void;
 export type SortEventListener = (newSort: ISort | undefined, oldSort: ISort | undefined) => void;
 
-export interface ITableModel<
-    K extends keyof R,
-    R extends ObjectWithKey<K, V>,
-    V = R[K],
-> {
+export interface ITableModel<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> {
     readonly keyField: K;
     readonly columns: Array<IColumn<R>>;
     readonly selection: Set<V>;
@@ -66,11 +58,7 @@ export interface ITableModel<
 export type RowClickHandler = (event: MouseEvent, rowIndex: number) => void;
 export type HeaderClickHandler = (event: MouseEvent, headerIndex: number) => void;
 
-export interface IViewConfig<
-    K extends keyof R,
-    R extends ObjectWithKey<K, V>,
-    V = R[K],
-> {
+export interface IViewConfig<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> {
     model: ITableModel<K, R, V>;
     onClickRow: RowClickHandler;
     onClickHeader: HeaderClickHandler;

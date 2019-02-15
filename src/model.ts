@@ -8,7 +8,7 @@ import {
     ObjectWithKey,
     RowEventListener,
     SelectionEventListener,
-    SortEventListener,
+    SortEventListener
 } from "./types";
 
 function removeFromArray<T>(elements: T[], element: T) {
@@ -31,12 +31,7 @@ export function getSortableValue<R>(row: R, column: IColumn<R>) {
     }
 }
 
-export class TableModel<
-    K extends keyof R,
-    R extends ObjectWithKey<K, V>,
-    V = R[K],
-> implements ITableModel<K, R, V> {
-
+export class TableModel<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> implements ITableModel<K, R, V> {
     public keyField: K;
     public columns: Array<IColumn<R>>;
     public selection: Set<V>;
@@ -73,8 +68,8 @@ export class TableModel<
 
         const { sort } = this;
         if (sort) {
-            const oldSortColumn = oldColumns.find((c) => c.key === sort.key);
-            const newSortColumn = newColumns.find((c) => c.key === sort.key);
+            const oldSortColumn = oldColumns.find(c => c.key === sort.key);
+            const newSortColumn = newColumns.find(c => c.key === sort.key);
             if (oldSortColumn !== newSortColumn) {
                 this.sortedRows = this.sortRows();
             }
@@ -157,12 +152,11 @@ export class TableModel<
             return rows;
         }
         const { key } = sort;
-        const column = columns.find((c) => c.key === key);
+        const column = columns.find(c => c.key === key);
         if (!column) {
             return rows;
         }
 
-        return sortBy(rows, (row) => getSortableValue(row, column), sort.ascending);
+        return sortBy(rows, row => getSortableValue(row, column), sort.ascending);
     }
-
 }

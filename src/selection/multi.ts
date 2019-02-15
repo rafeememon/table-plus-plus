@@ -9,18 +9,11 @@ function findIndex<T>(elements: T[], fn: (element: T) => boolean) {
     return null;
 }
 
-export class MultiSelectionAdapter<
-    K extends keyof R,
-    R extends ObjectWithKey<K, V>,
-    V = R[K],
-> implements ISelectionAdapter {
-
+export class MultiSelectionAdapter<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]>
+    implements ISelectionAdapter {
     private anchorKey: V | undefined;
 
-    public constructor(
-        private model: ITableModel<K, R, V>,
-        private handler: SelectionHandler<V>,
-    ) {}
+    public constructor(private model: ITableModel<K, R, V>, private handler: SelectionHandler<V>) {}
 
     public handleRowClick = (event: MouseEvent, rowIndex: number) => {
         if (event.getModifierState("Shift")) {
@@ -30,7 +23,7 @@ export class MultiSelectionAdapter<
         } else {
             this.handleNormalRowClick(rowIndex);
         }
-    }
+    };
 
     private handleNormalRowClick(rowIndex: number) {
         const { sortedRows, keyField } = this.model;
@@ -41,7 +34,7 @@ export class MultiSelectionAdapter<
     private handleShiftRowClick(rowIndex: number) {
         if (this.anchorKey !== undefined) {
             const { sortedRows, keyField } = this.model;
-            const anchorIndex = findIndex(sortedRows, (r) => r[keyField] === this.anchorKey);
+            const anchorIndex = findIndex(sortedRows, r => r[keyField] === this.anchorKey);
             if (anchorIndex != null) {
                 const newSelection = new Set<V>();
                 const min = Math.min(rowIndex, anchorIndex);
@@ -69,5 +62,4 @@ export class MultiSelectionAdapter<
         }
         this.handler(newSelection);
     }
-
 }

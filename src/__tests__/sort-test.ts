@@ -6,7 +6,6 @@ import { createMouseEvent } from "./events";
 import { FOURTEENERS, IMountain, MOUNTAIN_COLUMNS } from "../__demo__/mountains";
 
 describe("Sort adapter", () => {
-
     let model: ITableModel<"name", IMountain>;
     let adapter: SortAdapter<"name", IMountain>;
 
@@ -14,9 +13,9 @@ describe("Sort adapter", () => {
         model = new TableModel({
             keyField: "name",
             rows: FOURTEENERS,
-            columns: MOUNTAIN_COLUMNS,
+            columns: MOUNTAIN_COLUMNS
         });
-        adapter = new SortAdapter(model, (newSort) => {
+        adapter = new SortAdapter(model, newSort => {
             model.setSort(newSort);
         });
     });
@@ -37,11 +36,9 @@ describe("Sort adapter", () => {
         adapter.handleHeaderClick(createMouseEvent(), 0);
         expect(model.sort).toEqual({ key: MOUNTAIN_COLUMNS[0].key, ascending: true });
     });
-
 });
 
 describe("sortBy", () => {
-
     function sortByLength(element: string) {
         return element.length;
     }
@@ -62,9 +59,8 @@ describe("sortBy", () => {
     });
 
     test("sorts nulls to the end", () => {
-        expect(sortBy([null, "a", "b"], (e) => e, true)).toEqual(["a", "b", null]);
-        expect(sortBy(["a", null, "b"], (e) => e, true)).toEqual(["a", "b", null]);
-        expect(sortBy(["a", "b", null], (e) => e, true)).toEqual(["a", "b", null]);
+        expect(sortBy([null, "a", "b"], e => e, true)).toEqual(["a", "b", null]);
+        expect(sortBy(["a", null, "b"], e => e, true)).toEqual(["a", "b", null]);
+        expect(sortBy(["a", "b", null], e => e, true)).toEqual(["a", "b", null]);
     });
-
 });
