@@ -1,4 +1,4 @@
-import { ISelectionAdapter, ITableModel, ObjectWithKey, SelectionHandler } from "../types";
+import { ISelectionAdapter, ITableModel, SelectionHandler } from "../types";
 
 function findIndex<T>(elements: T[], fn: (element: T) => boolean) {
     for (let index = 0; index < elements.length; index++) {
@@ -9,8 +9,7 @@ function findIndex<T>(elements: T[], fn: (element: T) => boolean) {
     return null;
 }
 
-export class MultiSelectionAdapter<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]>
-    implements ISelectionAdapter {
+export class MultiSelectionAdapter<K extends keyof R, R extends Record<K, V>, V = R[K]> implements ISelectionAdapter {
     private anchorKey: V | undefined;
 
     public constructor(private model: ITableModel<K, R, V>, private handler: SelectionHandler<V>) {}

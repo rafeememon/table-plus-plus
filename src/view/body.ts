@@ -1,4 +1,4 @@
-import { IColumn, ITableModel, ITableSectionView, ObjectWithKey, RowClickHandler } from "../types";
+import { IColumn, ITableModel, ITableSectionView, RowClickHandler } from "../types";
 import { findParentElementOfType, getChildIndex, replaceWith } from "./dom";
 import { union } from "./math";
 
@@ -48,7 +48,7 @@ export function getCellText<R>(row: R, column: IColumn<R>): string {
     }
 }
 
-export class TableBodyView<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> implements ITableSectionView {
+export class TableBodyView<K extends keyof R, R extends Record<K, V>, V = R[K]> implements ITableSectionView {
     public element: HTMLTableSectionElement;
     private trElements: Map<R, HTMLTableRowElement> = new Map();
 

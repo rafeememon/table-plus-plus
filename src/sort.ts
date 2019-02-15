@@ -1,6 +1,6 @@
-import { ISortAdapter, ITableModel, ObjectWithKey, SortHandler } from "./types";
+import { ISortAdapter, ITableModel, SortHandler } from "./types";
 
-export class SortAdapter<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> implements ISortAdapter {
+export class SortAdapter<K extends keyof R, R extends Record<K, V>, V = R[K]> implements ISortAdapter {
     public constructor(private model: ITableModel<K, R, V>, private handler: SortHandler) {}
 
     public handleHeaderClick = (_event: MouseEvent, headerIndex: number) => {

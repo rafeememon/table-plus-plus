@@ -1,4 +1,4 @@
-import { HeaderClickHandler, IColumn, ISort, ITableModel, ITableSectionView, ObjectWithKey } from "../types";
+import { HeaderClickHandler, IColumn, ISort, ITableModel, ITableSectionView } from "../types";
 import { findParentElementOfType, getChildIndex, replaceWith } from "./dom";
 
 export const SORT_ARROW_CLASSNAME = "tpp-sort-arrow";
@@ -12,7 +12,7 @@ function getClickedHeaderIndex(event: MouseEvent) {
     }
 }
 
-export class TableHeaderView<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> implements ITableSectionView {
+export class TableHeaderView<K extends keyof R, R extends Record<K, V>, V = R[K]> implements ITableSectionView {
     public element: HTMLTableSectionElement;
     private thElements: Map<IColumn<R>, HTMLTableHeaderCellElement> = new Map();
 

@@ -1,7 +1,6 @@
-import { ISelectionAdapter, ITableModel, ObjectWithKey, SelectionHandler } from "../types";
+import { ISelectionAdapter, ITableModel, SelectionHandler } from "../types";
 
-export class SingleSelectionAdapter<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]>
-    implements ISelectionAdapter {
+export class SingleSelectionAdapter<K extends keyof R, R extends Record<K, V>, V = R[K]> implements ISelectionAdapter {
     public constructor(private model: ITableModel<K, R, V>, private handler: SelectionHandler<V>) {}
 
     public handleRowClick = (_event: MouseEvent, rowIndex: number) => {

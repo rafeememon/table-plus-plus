@@ -1,4 +1,4 @@
-import { ITableSectionView, ITableView, IViewConfig, ObjectWithKey } from "../types";
+import { ITableSectionView, ITableView, IViewConfig } from "../types";
 import { TableBodyView } from "./body";
 import { applyStyles } from "./dom";
 import { TableHeaderView } from "./header";
@@ -29,7 +29,7 @@ const BODY_ELEMENT_STYLES: Partial<CSSStyleDeclaration> = {
     width: "100%"
 };
 
-export class FixedTableView<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> implements ITableView {
+export class FixedTableView<K extends keyof R, R extends Record<K, V>, V = R[K]> implements ITableView {
     public element: HTMLElement;
     private headerElement: HTMLElement;
     private headerTable: HTMLElement;

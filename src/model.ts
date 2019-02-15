@@ -5,7 +5,6 @@ import {
     ISort,
     ITableConfig,
     ITableModel,
-    ObjectWithKey,
     RowEventListener,
     SelectionEventListener,
     SortEventListener
@@ -31,7 +30,7 @@ export function getSortableValue<R>(row: R, column: IColumn<R>) {
     }
 }
 
-export class TableModel<K extends keyof R, R extends ObjectWithKey<K, V>, V = R[K]> implements ITableModel<K, R, V> {
+export class TableModel<K extends keyof R, R extends Record<K, V>, V = R[K]> implements ITableModel<K, R, V> {
     public keyField: K;
     public columns: Array<IColumn<R>>;
     public selection: Set<V>;
