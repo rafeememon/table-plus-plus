@@ -17,10 +17,11 @@ import {
 } from "..";
 
 function createSelectionAdapter<K extends keyof R, R extends Record<K, V>, V = R[K]>(
-    mode: SelectionMode | undefined,
+    props: ITableProps<K, R, V>,
     model: ITableModel<K, R, V>,
     handler: SelectionHandler<V>
 ) {
+    const mode = props.selectionMode || (props.onSelect ? "single" : "none");
     switch (mode) {
         case "single":
             return new SingleSelectionAdapter(model, handler);
@@ -59,7 +60,7 @@ export class Table<K extends keyof R, R extends Record<K, V>, V = R[K]> extends 
             selection: props.selection,
             sort: props.sort
         });
-        const selectionAdapter = createSelectionAdapter(props.selectionMode, this.model, this.handleSelect);
+        const selectionAdapter = createSelectionAdapter(props, this.model, this.handleSelect);
         const sortAdapter = new SortAdapter(this.model, this.handleSort);
         const config: IViewConfig<K, R, V> = {
             model: this.model,
