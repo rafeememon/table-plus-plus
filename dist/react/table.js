@@ -15,7 +15,8 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
 var __1 = require("..");
-function createSelectionAdapter(mode, model, handler) {
+function createSelectionAdapter(props, model, handler) {
+    var mode = props.selectionMode || (props.onSelect ? "single" : "none");
     switch (mode) {
         case "single":
             return new __1.SingleSelectionAdapter(model, handler);
@@ -57,7 +58,7 @@ var Table = /** @class */ (function (_super) {
             selection: props.selection,
             sort: props.sort
         });
-        var selectionAdapter = createSelectionAdapter(props.selectionMode, _this.model, _this.handleSelect);
+        var selectionAdapter = createSelectionAdapter(props, _this.model, _this.handleSelect);
         var sortAdapter = new __1.SortAdapter(_this.model, _this.handleSort);
         var config = {
             model: _this.model,
